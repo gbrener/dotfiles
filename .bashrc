@@ -88,7 +88,7 @@ function update_blog()
     sudo docker build -t $1 $WWW_LOCAL_DOCKER_DIR
     sudo docker save -o $1.tar $1
     bzip2 $1.tar
-    rsync -avz --progress $1.tar.bz2 www:$WWW_HOST_DIR
+    rsync -e ssh -avz --progress $1.tar.bz2 www:$WWW_HOST_DIR
     ssh www "cd $WWW_HOST_DIR; bunzip2 $1.tar.bz2; docker load -i $1.tar; docker run -d -p 80:80 $1"
     popd
 }
