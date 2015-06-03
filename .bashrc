@@ -9,10 +9,10 @@ export EDITOR="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
 export VISUAL=$EDITOR
 
 # set default options for "less" command (display "long prompt" and operate quietly)
-export LESS="-MQ"
+export LESS="-MQR"
 
-# remove duplicate commands in .history file
-export HISTCONTROL=ignoredups
+# don't log history for duplicate commands or commands that begin with spaces
+export HISTCONTROL=ignoreboth
 
 # add Anaconda to path
 export PATH="$HOME/anaconda3/bin:$PATH"
@@ -20,33 +20,40 @@ export PATH="$HOME/anaconda3/bin:$PATH"
 
 #### OPTIONS ####
 # spell-check and expand directories/paths (cdspell, dirspell, direxpand)
-test -o cdspell || shopt -s cdspell
-test -o direxpand || shopt -s direxpand
-test -o dirspell || shopt -s dirspell
+shopt -s cdspell 2>/dev/null
+shopt -s direxpand 2>/dev/null
+shopt -s dirspell 2>/dev/null
 
 # store multi-line cmds with embedded newlines in history (cmdhist, lithist)
-test -o cmdhist || shopt -s cmdhist
-test -o lithist || shopt -s lithist
+shopt -s cmdhist 2>/dev/null
+shopt -s lithist 2>/dev/null
 
 # update rows, columns as necessary after each cmd is executed (checkwinsize)
-test -o checkwinsize || shopt -s checkwinsize
+shopt -s checkwinsize 2>/dev/null
 
 # support the ** glob pattern (globstar)
-test -o globstar || shopt -s globstar
+shopt -s globstar 2>/dev/null
 
 # map ctrl to caps_lock
-setxkbmap -option ctrl:nocaps
+test `uname` = Darwin || setxkbmap -option ctrl:nocaps
 
+test `uname` = Darwin && export HISTSIZE=30
 
 #### ALIASES ####
 alias vi='vim'
-alias l='\ls -1F'
-alias ls='\ls -vAlhF --time-style=long-iso'
 alias rm='rm -i'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias gdb='gdb --quiet'
 alias grep='grep --color=always'
+alias hist='history | less'
+alias l='\ls -1F'
+if [ ! `uname` = Darwin ]
+then
+    alias ls='\ls -vAlhF --time-style=long-iso'
+else
+    alias ls='\ls -AlhF'
+fi
 
 
 #### FUNCTIONS ####
@@ -73,27 +80,3 @@ function extract () {
         echo "'$1' is not a valid file."
     fi
 }
-
-# update_blog: build a docker image serving up some static HTML/CSS/JS assets.
-#              upload the image tarball to a web host and spin up a docker container.
-function update_blog()
-{
-    if [ -z $1 ]
-    then
-	echo "usage: update_blog docker_image"
-	return 1
-    fi
-    pushd $WWW_LOCAL_DIR
-    make html
-    sudo docker build -t $1 $WWW_LOCAL_DOCKER_DIR
-    sudo docker save -o $1.tar $1
-    bzip2 $1.tar
-    rsync -e ssh -avz --progress $1.tar.bz2 www:$WWW_HOST_DIR
-    ssh www "cd $WWW_HOST_DIR; bunzip2 $1.tar.bz2; docker load -i $1.tar; docker run -d -p 80:80 $1"
-    popd
-}
-
-
-#### INCLUDES ####
-# export WWW_* env vars
-source ~/.bashrc_blog
