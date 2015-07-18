@@ -192,4 +192,5 @@
  '(show-paren-mismatch ((t (:underline t :weight ultra-bold :width extra-expanded)))))
 
 ;; enable shell-mode
+(setenv "PAGER" "cat")
 (shell)
