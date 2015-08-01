@@ -29,9 +29,9 @@
 ;;; STARTUP SETTINGS
 ;; enable features
 (dolist (sym '(set-goal-column
-	       narrow-to-region
-	       upcase-region
-	       downcase-region))
+               narrow-to-region
+               upcase-region
+               downcase-region))
   (put sym 'disabled nil))
 
 
