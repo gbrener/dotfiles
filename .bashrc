@@ -1,10 +1,13 @@
-#### ENV VARS ####
+#################
+#### ENVIRON ####
+#################
 # customize command prompt display
-export PS1='\u@\H \w: '
+PROMPT_COLOR=32
+export PS1='\[\033[${PROMPT_COLOR}m\]\u@\H \w: \[\033[0m\]'
 
 # set default editor to emacs
 # this comes in handy when in "less" (press 'v' to enter emacs)
-export ALTERNATE_EDITOR="emacs"
+export ALTERNATE_EDITOR=emacs
 export EDITOR="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
 export VISUAL=$EDITOR
 
@@ -18,34 +21,53 @@ export HISTCONTROL=ignoreboth
 export PATH="$HOME/anaconda3/bin:$PATH"
 
 
+#################
 #### OPTIONS ####
+#################
+# prevent accidental logouts when hitting C-d
+set -o ignoreeof
+
+# notify me asynchronously when background jobs finish
+set -o notify
+
+# don't repeat commands as they are executed
+set +o verbose
+set +o xtrace
+
+# don't log history
+#set -o nolog
+
 # spell-check and expand directories/paths (cdspell, dirspell, direxpand)
-shopt -s cdspell 2>/dev/null
-shopt -s direxpand 2>/dev/null
-shopt -s dirspell 2>/dev/null
+shopt -s -q cdspell
+shopt -s -q direxpand
+shopt -s -q dirspell
 
 # store multi-line cmds with embedded newlines in history (cmdhist, lithist)
-shopt -s cmdhist 2>/dev/null
-shopt -s lithist 2>/dev/null
+shopt -s -q cmdhist
+shopt -s -q lithist
 
 # update rows, columns as necessary after each cmd is executed (checkwinsize)
-shopt -s checkwinsize 2>/dev/null
+shopt -s -q checkwinsize
 
 # support the ** glob pattern (globstar)
-shopt -s globstar 2>/dev/null
-
-# map ctrl to caps_lock
+shopt -s -q globstar
+v
+# Map Ctrl to Caps Lock (if necessary)
 test `uname` = Darwin || setxkbmap -option ctrl:nocaps
 
+# limit history to 30 commands when on Mac
 test `uname` = Darwin && export HISTSIZE=30
 
+
+#################
 #### ALIASES ####
-alias vi='vim'
-alias rm='rm -i'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias gdb='gdb --quiet'
-alias grep='grep --color=always'
+#################
+alias vi='\vim'
+alias rm='\rm -i'
+alias cp='\cp -iv'
+alias mv='\mv -iv'
+alias gdb='\gdb --quiet'
+alias grep='\grep --color=always'
 alias hist='history | less'
 alias l='\ls -1F'
 if [ ! `uname` = Darwin ]
@@ -56,7 +78,9 @@ else
 fi
 
 
-#### FUNCTIONS ####
+#################
+####  UTILS  ####
+#################
 # extract: extract any known compressed file type
 #          got from internet
 function extract () {
@@ -80,3 +104,8 @@ function extract () {
         echo "'$1' is not a valid file."
     fi
 }
+
+if [ -f ~/.bashrc_blog ]
+then
+    source ~/.bashrc_blog
+fi
