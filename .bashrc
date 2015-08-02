@@ -51,7 +51,7 @@ shopt -s -q checkwinsize
 
 # support the ** glob pattern (globstar)
 shopt -s -q globstar
-v
+
 # Map Ctrl to Caps Lock (if necessary)
 test `uname` = Darwin || setxkbmap -option ctrl:nocaps
 
