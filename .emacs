@@ -17,8 +17,19 @@
  (t
   ;; load my private utility functions
   (setq ispell-program-name "/usr/bin/aspell")
-  (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d"))
-  (require 'utils)))
+  (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/elisp"))
+
+  (require 'utils)
+
+  ;; add erlang-mode to path
+  (let* ((erlang-dir "/usr/lib/erlang")
+	 (erlang-bin-dir (concat erlang-dir "/bin"))
+	 (erlang-etools-dir (shell-command-to-string (concat "find " erlang-dir " -type d -name \"emacs\" | sed q"))))
+    (add-to-list 'load-path erlang-etools-dir)
+    (setq erlang-root-dir erlang-dir)
+    (add-to-list 'exec-path (cons erlang-bin-dir exec-path))
+    ;(require 'erlang-start)
+    )))
 
 ;; allow Linux commands that use the pager,
 ;; e.g. 'man', 'less', etc
@@ -103,8 +114,13 @@ Dmitriy Igrishin's patched version of comint.el."
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
-;; activate flyspell-mode for .rst files and Python comments/docstrings
+(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+;; activate flyspell-mode for .rst files, .md files, and Python comments/docstrings
 (add-hook 'rst-mode 'flyspell-mode)
+(add-hook 'markdown-mode 'flyspell-mode)
 (add-hook 'python-mode-hook 'flyspell-prog-mode)
 
 ;; display a helpful message while decompressing/loading the Emacs manual
@@ -175,6 +191,8 @@ Dmitriy Igrishin's patched version of comint.el."
  '(auto-insert-mode t)
  '(auto-insert-query t)
  '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(comint-buffer-maximum-size 1024)
  '(default-frame-alist
     (quote
      ((background-color . "black")
@@ -183,6 +201,7 @@ Dmitriy Igrishin's patched version of comint.el."
  '(file-name-shadow-mode t)
  '(frame-background-mode (quote dark))
  '(global-font-lock-mode t)
+ '(global-subword-mode t)
  '(ido-mode (quote both) nil (ido))
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (getenv "USER"))
