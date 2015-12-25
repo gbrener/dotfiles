@@ -17,19 +17,18 @@
  (t
   ;; load my private utility functions
   (setq ispell-program-name "/usr/bin/aspell")
-  (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/elisp"))
-
-  (require 'utils)
 
   ;; add erlang-mode to path
   (let* ((erlang-dir "/usr/lib/erlang")
 	 (erlang-bin-dir (concat erlang-dir "/bin"))
-	 (erlang-etools-dir (shell-command-to-string (concat "find " erlang-dir " -type d -name \"emacs\" | sed q"))))
+	 (erlang-etools-dir (shell-command-to-string (concat "find " erlang-dir " -type d -name \"emacs\" -print0 -quit"))))
+    ;; remove trailing null character
+    (setq erlang-etools-dir (replace-regexp-in-string "\0$" "" erlang-etools-dir))
     (add-to-list 'load-path erlang-etools-dir)
     (setq erlang-root-dir erlang-dir)
-    (add-to-list 'exec-path (cons erlang-bin-dir exec-path))
-    ;(require 'erlang-start)
-    )))
+    (add-to-list 'exec-path erlang-bin-dir)
+    (require 'erlang-start))))
+(add-to-list 'auto-mode-alist '("\\.erl\\'" . erlang-mode))
 
 ;; allow Linux commands that use the pager,
 ;; e.g. 'man', 'less', etc
@@ -44,6 +43,12 @@
                upcase-region
                downcase-region))
   (put sym 'disabled nil))
+
+
+;; add MELPA package archive (M-x list-packages)
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
 
 
 ;;; UTILITY FUNCTIONS
@@ -114,6 +119,7 @@ Dmitriy Igrishin's patched version of comint.el."
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
+
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
@@ -139,10 +145,10 @@ Dmitriy Igrishin's patched version of comint.el."
       org-closed-keep-when-no-todo t
       org-log-done 'note
       org-hierarchical-todo-statistics t
-      org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "FEEDBACK" "|" "DONE"))
+      org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "PREEMPTED" "|" "DONE"))
       org-todo-keyword-faces '(("TODO" . org-warning)
                                ("IN-PROGRESS" . "yellow")
-                               ("FEEDBACK" . "blue")))
+                               ("PREEMPTED" . "blue")))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)

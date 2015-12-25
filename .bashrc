@@ -1,111 +1,43 @@
-#################
-#### ENVIRON ####
-#################
-# customize command prompt display
-PROMPT_COLOR=32
-export PS1='\[\033[${PROMPT_COLOR}m\]\u@\H \w: \[\033[0m\]'
+if [[ `uname` = Linux ]]; then
+    if `which setxkbmap`; then
+        setxkbmap -option ctrl:nocaps
+    else
+        echo "Warning: setxkbmap not available. Caps Lock remapping unsucessful."
+    fi
+fi
 
-# set default editor to emacs
-# this comes in handy when in "less" (press 'v' to enter emacs)
-export ALTERNATE_EDITOR=emacs
-export EDITOR="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
-export VISUAL=$EDITOR
-
-# set default options for "less" command (display "long prompt" and operate quietly)
-export LESS="-MQR"
-
-# don't log history for duplicate commands or commands that begin with spaces
+PROMPT_COLOR=32 # green
+export PS1='\[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
+export VISUAL="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
+export LESS="-MQR" # Enable long-prompt, quiet-operation, and ansi colors in "less"
 export HISTCONTROL=ignoreboth
-
-# add Anaconda to path
+test `uname` = Darwin && export HISTSIZE=30
+export MOZ_USE_OMTC=1 # Enable hardware acceleration in Firefox
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
 export PATH="$HOME/anaconda3/bin:$PATH"
 
+set -o ignoreeof # Prevent accidental logouts when hitting C-d
+set -o notify # Notify me asynchronously when background jobs finish
+#set -o nolog # Don't log history
+shopt -s -q cdspell # Spell-check paths
+shopt -s -q direxpand # Expand directories
+shopt -s -q dirspell # Spell-check directories
+shopt -s -q cmdhist # Save multi-line cmds
+shopt -s -q lithist # Store multi-line cmds with newlines instead of ;
+shopt -s -q checkwinsize # Update rows/columns as necessary after each cmd
+shopt -s -q globstar # Support the ** glob pattern
 
-#################
-#### OPTIONS ####
-#################
-# prevent accidental logouts when hitting C-d
-set -o ignoreeof
-
-# notify me asynchronously when background jobs finish
-set -o notify
-
-# don't repeat commands as they are executed
-set +o verbose
-set +o xtrace
-
-# don't log history
-#set -o nolog
-
-# spell-check and expand directories/paths (cdspell, dirspell, direxpand)
-shopt -s -q cdspell
-shopt -s -q direxpand
-shopt -s -q dirspell
-
-# store multi-line cmds with embedded newlines in history (cmdhist, lithist)
-shopt -s -q cmdhist
-shopt -s -q lithist
-
-# update rows, columns as necessary after each cmd is executed (checkwinsize)
-shopt -s -q checkwinsize
-
-# support the ** glob pattern (globstar)
-shopt -s -q globstar
-
-# Map Ctrl to Caps Lock (if necessary)
-test `uname` = Darwin || setxkbmap -option ctrl:nocaps
-
-# limit history to 30 commands when on Mac
-test `uname` = Darwin && export HISTSIZE=30
-
-
-#################
-#### ALIASES ####
-#################
-alias vi='\vim'
-alias rm='\rm -i'
+alias emacs=$VISUAL
+alias rm='\rm -iv'
 alias cp='\cp -iv'
 alias mv='\mv -iv'
 alias gdb='\gdb --quiet'
-alias grep='\grep --color=always'
 alias hist='history | less'
 alias l='\ls -1F'
-if [ ! `uname` = Darwin ]
-then
-    alias ls='\ls -vAlhF --time-style=long-iso'
-else
-    alias ls='\ls -AlhF'
-fi
+test `uname` = Darwin && alias ls='\ls -AFgh'
+test `uname` = Linux && alias ls='\ls -AFghv --time-style=long-iso'
+alias install_pkg='makepkg -sri'
 
-
-#################
-####  UTILS  ####
-#################
-# extract: extract any known compressed file type
-#          got from internet
-function extract () {
-    if [ -f $1 ]; then
-        case $1 in
-            *.tar.bz2) tar xvjf $1 ;;
-            *.tar.gz)  tar xvzf $1 ;;
-            *.bz2)     bunzip2 $1 ;;
-            *.rar)     unrar x $1 ;;
-            *.gz)      gunzip $1 ;;
-            *.tar)     tar xvf $1 ;;
-            *.tbz2)    tar xvjf $1 ;;
-            *.tgz)     tar xvzf $1 ;;
-            *.zip)     unzip $1 ;;
-            *.Z)       uncompress $1 ;;
-            *.z)       uncompress $1 ;;
-            *.7z)      7z x $1 ;;
-            *)         echo "don't know how to extract '$1'..." ;;
-        esac
-    else
-        echo "'$1' is not a valid file."
-    fi
-}
-
-if [ -f ~/.bashrc_blog ]
-then
-    source ~/.bashrc_blog
+if [ -f ~/.bashrc_home ]; then
+    source ~/.bashrc_home
 fi
