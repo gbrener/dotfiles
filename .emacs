@@ -9,11 +9,7 @@
  ((eq system-type 'darwin)
   (setq mac-option-modifier 'super
 	mac-command-modifier 'meta
-        ispell-program-name "/usr/local/bin/aspell")
-  (setenv "PATH"
-          (concat (concat "/Users/" (getenv "USER") "/anaconda/bin") ":"
-                  "/usr/local/bin" ":"
-                  (getenv "PATH"))))
+        ispell-program-name "/usr/local/bin/aspell"))
  (t
   ;; load my private utility functions
   (setq ispell-program-name "/usr/bin/aspell")
