@@ -9,12 +9,15 @@ fi
 PROMPT_COLOR=32 # green
 export PS1='\[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
 export VISUAL="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
+export EDITOR="$VISUAL"
 export LESS="-MQR" # Enable long-prompt, quiet-operation, and ansi colors in "less"
 export HISTCONTROL=ignoreboth
 test `uname` = Darwin && export HISTSIZE=30
 export MOZ_USE_OMTC=1 # Enable hardware acceleration in Firefox
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
+#export LD_LIBRARY_PATH=/usr/local/pgsql/lib
 export PATH="$HOME/anaconda3/bin:$PATH"
+export NIKOLA_BLOG_DIR="$HOME/Desktop/www/blog"
 
 set -o ignoreeof # Prevent accidental logouts when hitting C-d
 set -o notify # Notify me asynchronously when background jobs finish
