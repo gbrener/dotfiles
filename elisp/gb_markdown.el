@@ -2,12 +2,13 @@
 
 
 
-(when (file-exists-p (concat ELISP-DIR "markdown-mode/markdown-mode.el"))
+(when (file-exists-p (concat ELISP-DIR "/markdown-mode/markdown-mode.el"))
+  (add-to-list 'load-path (concat ELISP-DIR "/markdown-mode"))
   (require 'markdown-mode)
   (autoload 'markdown-mode "markdown-mode" 
     "Major mode for editing Markdown files" t)
-  (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode)))
+  (add-to-list 'auto-mode-alist '("\\.markdown$" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
 
 
 

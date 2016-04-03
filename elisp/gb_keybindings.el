@@ -2,6 +2,9 @@
 
 
 
+;; When I try to find-file, look under cursor for a possible filename
+(ffap-bindings)
+
 ;; Just in case the Alt key isn't working, and we need M-x
 (global-set-key (kbd "C-x C-m") 'execute-extended-command)
 

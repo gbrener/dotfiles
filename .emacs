@@ -24,6 +24,7 @@
 (require 'gb_flyspell)
 (require 'gb_erlang)
 (require 'gb_markdown)
+(require 'gb_yaml)
 
 
 (custom-set-variables
@@ -34,6 +35,7 @@
  '(auto-compression-mode t)
  '(auto-insert-mode t)
  '(auto-insert-query t)
+ '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backups"))))
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
@@ -42,10 +44,15 @@
      ((background-color . "black")
       (foreground-color . "white"))))
  '(dired-listing-switches "-vAlhF --time-style=long-iso")
+ '(electric-pair-mode t)
  '(file-name-shadow-mode t)
  '(frame-background-mode (quote dark))
  '(global-font-lock-mode t)
  '(global-subword-mode t)
+ '(history-delete-duplicates t)
+ '(history-length 1000)
+ '(ido-create-new-buffer (quote always))
+ '(ido-enable-flex-matching t)
  '(ido-mode (quote both) nil (ido))
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (getenv "USER"))
@@ -57,11 +64,13 @@
 
 ")
  '(line-move-visual nil)
+ '(make-backup-files t)
  '(mark-ring-max 23)
  '(menu-bar-mode nil)
  '(occur-hook (quote ((lambda nil (occur-rename-buffer t)))))
  '(org-agenda-files nil)
  '(python-indent 4)
+ '(python-indent-offset 4)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 1000000)
  '(scroll-preserve-screen-position 1)
@@ -76,7 +85,8 @@
  '(vc-handled-backends nil)
  '(version-control (quote never))
  '(visible-bell t)
- '(windmove-wrap-around t))
+ '(windmove-wrap-around t)
+ '(x-stretch-cursor t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -84,5 +94,6 @@
  ;; If there is more than one, they won't work right.
  '(link ((t (:foreground "green" :underline t))))
  '(minibuffer-prompt ((t (:foreground "green"))))
+ '(region ((t (:background "chartreuse" :foreground "black"))))
  '(show-paren-match ((t (:background "white" :foreground "black"))))
  '(show-paren-mismatch ((t (:underline t :weight ultra-bold :width extra-expanded)))))
