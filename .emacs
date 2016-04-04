@@ -15,12 +15,16 @@
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
 ;; Most of the features below are provided from "elisp" directory
 (require 'gb_utils)
+(require 'rectangle-select)
 (require 'gb_shell)
 (require 'gb_org)
+(require 'gb_yasnippet)
 (require 'gb_flyspell)
 (require 'gb_erlang)
 (require 'gb_markdown)
