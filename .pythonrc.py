@@ -3,10 +3,10 @@ from __future__ import print_function, unicode_literals, division
 import sys, os, shutil, glob, shlex
 import re
 import inspect
+import datetime
 import numpy as np
 import pandas as pd
 from collections import namedtuple, defaultdict, OrderedDict, Counter, deque
-from datetime import datetime, date, time, timedelta
 from dateutil.parser import parse as parse_date
 
 #### IPython config
