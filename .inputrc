@@ -1,0 +1,31 @@
+# Visual bell
+set bell-style visual
+
+# Use ... for common prefixes longer than N
+set completion-prefix-display-length 5
+
+# Editing mode is Emacs
+set editing-mode emacs
+set keymap emacs
+
+# Enable tilde-expansion
+set expand-tilde On
+
+# Enable the application keypad and/or arrow-keys
+set enable-keypad On
+
+# Enable meta key
+set enable-meta-key On
+
+# Use ESC/Meta-n/p to cycle history (like in Emacs shell)
+"\ep": history-search-backward
+"\en": history-search-forward
+
+# Match hidden files
+set match-hidden-files On
+
+# Single-TAB completion
+set show-all-if-ambiguous on
+
+# Tab-completion shows file-types a-la 'ls -F'
+set visible-stats on

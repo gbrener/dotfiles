@@ -1,6 +1,9 @@
 ;;; utils.el --- Emacs lisp utilities                -*- lexical-binding: t; -*-
 
 
+;; "C-x f" does a find-file-at-point
+(ffap-bindings)
+
 ;; Remap modifier keys if necessary
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'super

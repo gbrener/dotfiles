@@ -1,23 +1,15 @@
-if [[ `uname` = Linux ]]; then
-    if `which setxkbmap`; then
-        setxkbmap -option ctrl:nocaps
-    else
-        echo "Warning: setxkbmap not available. Caps Lock remapping unsucessful."
-    fi
-fi
-
 PROMPT_COLOR=32 # green
 export PS1='\[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
 export VISUAL="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
 export EDITOR="$VISUAL"
 export LESS="-MQR" # Enable long-prompt, quiet-operation, and ansi colors in "less"
 export HISTCONTROL=ignoreboth
-test `uname` = Darwin && export HISTSIZE=30
+export HISTIGNORE="ls:ls *:mutt:[bf]g:exit:history:history *"
+[[ `uname` = Darwin ]] && export HISTSIZE=30
 export MOZ_USE_OMTC=1 # Enable hardware acceleration in Firefox
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
 #export LD_LIBRARY_PATH=/usr/local/pgsql/lib
 export PATH="$HOME/anaconda3/bin:$PATH"
-export NIKOLA_BLOG_DIR="$HOME/Desktop/www/blog"
 
 set -o ignoreeof # Prevent accidental logouts when hitting C-d
 set -o notify # Notify me asynchronously when background jobs finish
@@ -37,10 +29,21 @@ alias mv='\mv -iv'
 alias gdb='\gdb --quiet'
 alias hist='history | less'
 alias l='\ls -1F'
-test `uname` = Darwin && alias ls='\ls -AFgh'
-test `uname` = Linux && alias ls='\ls -AFghv --time-style=long-iso'
+[[ `uname` = Darwin ]] && alias ls='\ls -AFgh'
+[[ `uname` = Linux ]] && alias ls='\ls -AFghv --time-style=long-iso'
 alias install_pkg='makepkg -sri'
 
-if [ -f ~/.bashrc_home ]; then
-    source ~/.bashrc_home
+# Remap CTRL to CAPS-LOCK
+if [[ `uname` = Linux ]]; then
+    if `which setxkbmap`; then
+        setxkbmap -option ctrl:nocaps
+    else
+        echo "Warning: setxkbmap not available. Caps Lock remapping unsucessful."
+    fi
 fi
+
+# Load .bashrc if it's readable
+[[ -r ~/.bashrc ]] && . ~/.bashrc
+
+# Initialize X session if there's a display
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
