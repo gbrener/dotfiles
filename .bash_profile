@@ -1,6 +1,6 @@
 PROMPT_COLOR=32 # green
 export PS1='\[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
-export VISUAL="emacsclient -s $HOME/.emacs.d/sock -c -a ''"
+export VISUAL="emacsclient -c -s /tmp/emacs1000/server -a ''"
 export EDITOR="$VISUAL"
 export LESS="-MQR" # Enable long-prompt, quiet-operation, and ansi colors in "less"
 export HISTCONTROL=ignoreboth

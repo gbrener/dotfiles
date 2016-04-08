@@ -1,0 +1,19 @@
+[Unit]
+Description=JupyterHub: Multi-user server for Jupyter notebooks
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/jupyterhub --no-ssl -f /etc/jupyterhub/jupyterhub.py
+ExecStop=
+WorkingDirectory=/home/jupyter/
+User=jupyter
+Group=jupyter
+Environment="HOME=/home/jupyter/"
+StandardOutput=syslog
+StandardError=syslog
+Restart=always
+
+
+[Install]
+WantedBy=multi-user.target
