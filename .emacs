@@ -14,9 +14,9 @@
 (add-to-list 'load-path ELISP-DIR)
 
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
 (package-initialize)
 
 ;; Most of the features below are provided from "elisp" directory
@@ -29,6 +29,14 @@
 (require 'gb_erlang)
 (require 'gb_markdown)
 (require 'gb_yaml)
+(require 'gb_use-package)
+
+;; For the non-local packages, install them automatically.
+;; This is handy for when a package has a lot of dependencies.
+(use-package magit
+  :ensure t)
+(use-package ein
+  :ensure t)
 
 
 (custom-set-variables

@@ -4,7 +4,7 @@ export VISUAL="emacsclient -c -s /tmp/emacs1000/server -a ''"
 export EDITOR="$VISUAL"
 export LESS="-MQR" # Enable long-prompt, quiet-operation, and ansi colors in "less"
 export HISTCONTROL=ignoreboth
-export HISTIGNORE="ls:ls *:mutt:[bf]g:exit:history:history *"
+export HISTIGNORE="[bf]g:exit:history:history *"
 [[ `uname` = Darwin ]] && export HISTSIZE=30
 export MOZ_USE_OMTC=1 # Enable hardware acceleration in Firefox
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
@@ -29,6 +29,7 @@ alias mv='\mv -iv'
 alias gdb='\gdb --quiet'
 alias hist='history | less'
 alias l='\ls -1F'
+alias ns='netstat -xaupen'
 [[ `uname` = Darwin ]] && alias ls='\ls -AFgh'
 [[ `uname` = Linux ]] && alias ls='\ls -AFghv --time-style=long-iso'
 alias install_pkg='makepkg -sri'
