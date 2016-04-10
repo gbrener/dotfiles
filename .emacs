@@ -4,11 +4,14 @@
 ;;;;
 
 
-(setq ELISP-DIR "~/.emacs.d/elisp")
+(setq ELISP-DIR "~/.emacs.d/elisp"
+      PLUGINS-DIR "~/.emacs.d/plugins")
 
-;; Create the elisp directory if it doesn't already exist
+;; Create the elisp and plugins directories if they don't already exist
 (when (not (file-exists-p ELISP-DIR))
   (make-directory ELISP-DIR t))
+(when (not (file-exists-p PLUGINS-DIR))
+  (make-directory PLUGINS-DIR t))
 
 ;; Add elisp directory to load-path so that we can pick up the files
 (add-to-list 'load-path ELISP-DIR)
@@ -21,7 +24,6 @@
 
 ;; Most of the features below are provided from "elisp" directory
 (require 'gb_utils)
-(require 'gb_rect-select)
 (require 'gb_shell)
 (require 'gb_org)
 (require 'gb_yasnippet)
@@ -30,13 +32,12 @@
 (require 'gb_markdown)
 (require 'gb_yaml)
 (require 'gb_use-package)
+(require 'gb_rect-select)
 
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
-(use-package magit
-  :ensure t)
-(use-package ein
-  :ensure t)
+(use-package magit) ; :ensure t)
+(use-package ein) ; :ensure t)
 
 
 (custom-set-variables
