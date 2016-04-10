@@ -2,6 +2,7 @@
 
 
 (when (file-exists-p (concat ELISP-DIR "/rect-select"))
+  (add-to-list 'load-path (concat ELISP-DIR "/rect-select"))
   (require 'rectangle-select))
 
 
