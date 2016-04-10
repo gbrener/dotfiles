@@ -3,7 +3,7 @@ if [[ `uname` = Linux ]]; then
     if [[ -x /usr/bin/setxkbmap ]]; then
         /usr/bin/setxkbmap -option ctrl:nocaps
     else
-        echo "Warning: setxkbmap not available. Caps Lock remapping unsucessful."
+        echo "Warning: setxkbmap not available. Caps Lock remapping unsuccessful."
     fi
 fi
 
