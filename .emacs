@@ -21,7 +21,7 @@
 
 ;; Most of the features below are provided from "elisp" directory
 (require 'gb_utils)
-(require 'rectangle-select)
+(require 'gb_rect-select)
 (require 'gb_shell)
 (require 'gb_org)
 (require 'gb_yasnippet)

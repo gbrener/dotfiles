@@ -2,8 +2,8 @@
 
 
 
-(when (file-exists-p (concat ELISP-DIR "/plugins/use-package"))
-  (add-to-list 'load-path (concat ELISP-DIR "/plugins/use-package"))
+(when (file-exists-p (concat PLUGINS-DIR "/use-package"))
+  (add-to-list 'load-path (concat PLUGINS-DIR "/use-package"))
   (require 'use-package))
 
 

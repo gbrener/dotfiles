@@ -1,0 +1,32 @@
+# -*- mode: snippet -*-
+# name: Scaffolding for an executable Python script
+# binding: C-c i
+# --
+#!/usr/bin/env python
+
+
+
+'''${1:A script that does X, Y, and Z.}
+
+Usage: ${4:$$(concat "./" (file-name-nondirectory (buffer-file-name)))} $2 --${3:$(replace-regexp-in-string "_" "-" yas-text)} $3
+'''
+
+
+
+import argparse
+
+
+
+def main(${2:arg0}, ${3:arg1}):
+    """Main function."""
+    ${0:pass}
+
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(usage='$4 $2 --${3:$(replace-regexp-in-string "_" "-" yas-text)} $3',
+    description='$1')
+    parser.add_argument('$2', help='${2:$(replace-regexp-in-string "_" " " yas-text)}')
+    parser.add_argument('-${3:$(substring yas-text 0 1)}', '--${3:$(replace-regexp-in-string "_" "-" yas-text)}', help='${3:$(replace-regexp-in-string "_" " " yas-text)}')
+    args = parser.parse_args()
+    main(args.$2, args.$3)
