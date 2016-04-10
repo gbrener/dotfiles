@@ -1,5 +1,6 @@
 [Unit]
 Description=Emacs: the extensible, self-documenting text editor
+After=network-online.target
 
 [Service]
 Type=forking
@@ -7,6 +8,8 @@ ExecStart=/usr/bin/emacs --daemon
 ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
 WorkingDirectory=/home/greg/
 User=greg
+Group=greg
+Environment="HOME=/home/greg/"
 StandardOutput=syslog
 StandardError=syslog
 Restart=always
