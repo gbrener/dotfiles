@@ -7,7 +7,8 @@
 (defconst ELISP-DIR  "~/.emacs.d/elisp"
   "Emacs library directory.")
 
-(defconst PLUGINS-DIR "~/.emacs.d/plugins"
+(defconst PLUGINS-DIR
+  "~/.emacs.d/plugins"
   "Emacs plugins directory (elisp files that don't have 'modes').")
 
 ;; Create the elisp and plugins directories if they don't already exist
@@ -35,12 +36,13 @@
 (require 'gb_erlang)
 (require 'gb_markdown)
 (require 'gb_yaml)
+(require 'gb_json)
 (require 'gb_use-package)
 (require 'gb_rect-select)
 
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
-(use-package magit :ensure t)
+(use-package magit) ; :ensure t)
 (use-package ein :ensure t)
 
 
