@@ -59,19 +59,37 @@ Dmitriy Igrishin's patched version of comint.el."
   (message "Opening Emacs manual..."))
 (ad-activate 'info-emacs-manual)
 
+
+(defun buffer-name-matches-p (match-prefix)
+  "Return a function which has the following behavior:
+      Return `buf'\'s buffer-name if it matches the prefix `match-prefix';
+      Otherwise return `nil'."
+  #'(lambda (buf)
+      (let ((name (buffer-name buf))
+            (min-length (length match-prefix)))
+        (when (> (length name) min-length)
+          (let ((name-prefix (substring name 0 min-length)))
+            (when (string= match-prefix name-prefix)
+              name))))))
+
+
+
+;;; Blog-related stuff
+(defun filter-out-nils (lst)
+  "Remove `nil' values from `lst'"
+  (delete nil lst))
+
+(defun sort-strings-asc (lst)
+  "Sort `lst', a list of strings, lexographically in ascending-order"
+  (sort lst #'string<))
+
 (defun blog (title tags)
-  "Prompt for title/tags, create a shell buffer, set up blog environment, and ready a new post for writing."
+  "Prompt for `title' and `tags', create a *shell* buffer, set up blog environment, and ready a new post for writing."
   (interactive "MTitle: \nMTags (csv): ")
-  (let* ((blog-buffer-names
-          (sort (delete nil (mapcar #'(lambda (buf)
-                                        (let ((name (buffer-name buf))
-                                              (min-length (length "*shell*<blog")))
-                                          (when (> (length name) min-length)
-                                            (let ((name-prefix (substring name 0 min-length)))
-                                              (when (string= "*shell*<blog" name-prefix)
-                                                name)))))
-                                    (buffer-list)))
-                #'string<))
+  (let* ((buffer-name-matcher (buffer-name-matches-p "*shell*<blog"))
+         (blog-buffer-names (sort-strings-asc
+                             (filter-out-nils
+                              (mapcar buffer-name-matcher (buffer-list)))))
          (max-n-blog (length (butlast blog-buffer-names)))
          (new-blog-name (format "*shell*<blog-%d>" (1+ max-n-blog))))
     (shell new-blog-name)
@@ -81,6 +99,7 @@ Dmitriy Igrishin's patched version of comint.el."
     (comint-send-input)
     (insert (format "nikola new_post --title='%s' --tags='%s' -f ipynb" title tags))
     (comint-send-input)
+    (insert "")
     (insert "jupyter notebook --notebook-dir=posts")
     (comint-send-input)))
 

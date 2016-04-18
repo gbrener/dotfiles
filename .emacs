@@ -4,8 +4,11 @@
 ;;;;
 
 
-(setq ELISP-DIR "~/.emacs.d/elisp"
-      PLUGINS-DIR "~/.emacs.d/plugins")
+(defconst ELISP-DIR  "~/.emacs.d/elisp"
+  "Emacs library directory.")
+
+(defconst PLUGINS-DIR "~/.emacs.d/plugins"
+  "Emacs plugins directory (elisp files that don't have 'modes').")
 
 ;; Create the elisp and plugins directories if they don't already exist
 (when (not (file-exists-p ELISP-DIR))
@@ -24,6 +27,7 @@
 
 ;; Most of the features below are provided from "elisp" directory
 (require 'gb_utils)
+(require 'gb_keybindings)
 (require 'gb_shell)
 (require 'gb_org)
 (require 'gb_yasnippet)
@@ -36,7 +40,7 @@
 
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
-(use-package magit) ; :ensure t)
+(use-package magit :ensure t)
 (use-package ein :ensure t)
 
 
