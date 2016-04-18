@@ -39,10 +39,11 @@
 (require 'gb_json)
 (require 'gb_use-package)
 (require 'gb_rect-select)
+(require 'gb_aggressive-fill-paragraph)
 
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
-(use-package magit) ; :ensure t)
+(use-package magit :ensure t)
 (use-package ein :ensure t)
 
 
