@@ -37,7 +37,7 @@
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
 (use-package magit) ; :ensure t)
-(use-package ein) ; :ensure t)
+(use-package ein :ensure t)
 
 
 (custom-set-variables
@@ -56,7 +56,7 @@
     (quote
      ((background-color . "black")
       (foreground-color . "white"))))
- '(dired-listing-switches "-vAlhF --time-style=long-iso")
+ '(dired-listing-switches (concat "-vAlhF" (if (eq system-type 'darwin) "" " --time-style=long-iso")))
  '(electric-pair-mode t)
  '(file-name-shadow-mode t)
  '(frame-background-mode (quote dark))
