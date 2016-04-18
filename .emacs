@@ -5,11 +5,15 @@
 
 
 (defconst ELISP-DIR  "~/.emacs.d/elisp"
-  "Emacs library directory.")
+  "Emacs library directory")
 
 (defconst PLUGINS-DIR
   "~/.emacs.d/plugins"
-  "Emacs plugins directory (elisp files that don't have 'modes').")
+  "Emacs plugins directory (elisp files that don't have 'modes')")
+
+(defconst THEMES-DIR
+  "~/.emacs.d/themes/"
+  "Emacs themes directory")
 
 ;; Create the elisp and plugins directories if they don't already exist
 (when (not (file-exists-p ELISP-DIR))
@@ -17,8 +21,11 @@
 (when (not (file-exists-p PLUGINS-DIR))
   (make-directory PLUGINS-DIR t))
 
-;; Add elisp directory to load-path so that we can pick up the files
+;; Add elisp directory to load-path
 (add-to-list 'load-path ELISP-DIR)
+
+;; Add themes direcory to load-path
+(add-to-list 'custom-theme-load-path THEMES-DIR)
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -40,12 +47,15 @@
 (require 'gb_use-package)
 (require 'gb_rect-select)
 (require 'gb_aggressive-fill-paragraph)
+(require 'gb_annotate)
 
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
 (use-package magit :ensure t)
 (use-package ein :ensure t)
 
+;; Load theme
+(load-theme 'ample-zen t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
