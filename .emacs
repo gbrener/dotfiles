@@ -48,6 +48,7 @@
 (require 'gb_rect-select)
 (require 'gb_aggressive-fill-paragraph)
 (require 'gb_annotate)
+(require 'gb_bash-completion)
 
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
@@ -55,7 +56,7 @@
 (use-package ein :ensure t)
 
 ;; Load theme
-(load-theme 'ample-zen t)
+(load-theme 'wombat t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

@@ -2,7 +2,7 @@
 
 
 
-;; When I try to find-file, look under cursor for a possible filename
+;; "C-x f" does a find-file-at-point
 (ffap-bindings)
 
 ;; Just in case the Alt key isn't working, and we need M-x
@@ -25,7 +25,6 @@
                     (if (use-region-p)
 			'canonically-space-region
                       'just-one-space))))
-
 
 ;; bind C-c + to 'increment-at-point'
 (global-set-key (kbd "C-c +")

@@ -9,11 +9,5 @@
 
 
 
-(provide 'gb_erlang)
-;;; erlang.el ends here
-
-
-
-
 (provide 'gb_json)
 ;;; gb_json.el ends here

@@ -8,7 +8,7 @@
 
 '''${1:A script that does X, Y, and Z.}
 
-Usage: ${4:$$(concat "./" (file-name-nondirectory (buffer-file-name)))} $2 --${3:$(replace-regexp-in-string "_" "-" yas-text)} $3
+Usage: ${4:$(concat "./" (file-name-nondirectory (buffer-file-name)))} $2 --${3:$(replace-regexp-in-string "_" "-" yas-text)} $3
 '''
 
 
