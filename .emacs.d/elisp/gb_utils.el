@@ -1,9 +1,6 @@
 ;;; utils.el --- Emacs lisp utilities                -*- lexical-binding: t; -*-
 
 
-;; "C-x f" does a find-file-at-point
-(ffap-bindings)
-
 ;; Remap modifier keys if necessary
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'super
@@ -12,6 +9,7 @@
 ;; Use "y or n" for answers instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Don't prompt me before creating a new file or buffer
 (setq confirm-nonexistant-file-or-buffer nil)
 
 ;; Enable features that are turned-off by default
@@ -103,6 +101,12 @@ Dmitriy Igrishin's patched version of comint.el."
     (insert "jupyter notebook --notebook-dir=posts")
     (comint-send-input)))
 
+
+
+(defun connected-to-internet-p ()
+  (let ((net-interfaces (network-interface-list)))
+    (or (assoc "wlo1" net-interfaces)
+        (assoc "en0" net-interfaces))))
 
 
 (provide 'gb_utils)

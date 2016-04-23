@@ -27,12 +27,6 @@
 ;; Add themes direcory to load-path
 (add-to-list 'custom-theme-load-path THEMES-DIR)
 
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
-(package-initialize)
-
 ;; Most of the features below are provided from "elisp" directory
 (require 'gb_utils)
 (require 'gb_keybindings)
@@ -46,17 +40,25 @@
 (require 'gb_json)
 (require 'gb_use-package)
 (require 'gb_rect-select)
-(require 'gb_aggressive-fill-paragraph)
 (require 'gb_annotate)
 (require 'gb_bash-completion)
 
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
+
 ;; For the non-local packages, install them automatically.
 ;; This is handy for when a package has a lot of dependencies.
-(use-package magit :ensure t)
-(use-package ein :ensure t)
+(when (connected-to-internet-p)
+  (package-initialize)
+  (package-refresh-contents)
+  (use-package magit :ensure t)
+  (use-package ein :ensure t))
 
 ;; Load theme
 (load-theme 'wombat t)
+;(load-theme 'badwolf t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -70,10 +72,6 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
- '(default-frame-alist
-    (quote
-     ((background-color . "black")
-      (foreground-color . "white"))))
  '(dired-listing-switches (concat "-vAlhF" (if (eq system-type 'darwin) "" " --time-style=long-iso")))
  '(electric-pair-mode t)
  '(file-name-shadow-mode t)
@@ -123,8 +121,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(link ((t (:foreground "green" :underline t))))
- '(minibuffer-prompt ((t (:foreground "green"))))
- '(region ((t (:background "chartreuse" :foreground "black"))))
- '(show-paren-match ((t (:background "white" :foreground "black"))))
- '(show-paren-mismatch ((t (:underline t :weight ultra-bold :width extra-expanded)))))
+)
