@@ -41,7 +41,7 @@
 (require 'gb_use-package)
 (require 'gb_rect-select)
 (require 'gb_annotate)
-(require 'gb_bash-completion)
+(require 'gb_xt-mouse)
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)

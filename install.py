@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#  ~~~
+#  ANNOTATION: 
 
 
 """Install config files into their appropriate locations.
