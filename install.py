@@ -10,7 +10,7 @@ assumes it's on an operating system with the `find' command. For example,
 it should work on Linux, Mac OS X, FreeBSD, Solaris, etc.
 """
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import argparse
 import platform
@@ -31,23 +31,23 @@ SYS_NAME = platform.system()
 DOTFILE_SPECS = {
     'home': (True,
              'find . -maxdepth 1 -type f -name ".*" -a -not -name ".git*"',
-             '~'),
+             b'~'),
 
     'emacs': (True,
               'find .emacs.d -type f -name "*.el" -o -name "*.elc"',
-              '~'),
+              b'~'),
 
     'systemd': (SYS_NAME == 'Linux',
                 'find etc -type f -name "*.service"',
-                '/'),
+                b'/'),
 
     'launchd': (SYS_NAME == 'Darwin',
                 'find etc -type f -name "*.plist"',
-                '/'),
+                b'/'),
 }
 
 
-def main(overwrite=False, verbose=False):
+def main(overwrite=False, verbose=False, dry_run=False):
     """Copy the files to their appropriate locations.
     """
     print('Copying files to appropriate system locations:')
@@ -60,10 +60,10 @@ def main(overwrite=False, verbose=False):
 
         # Retrieve the files to be copied
         file_paths_str = subprocess.check_output(cmd, shell=True)
-        file_paths = filter(None, file_paths_str.strip().split('\n'))
+        file_paths = filter(None, file_paths_str.strip().split(b'\n'))
 
         if file_paths:
-            print('    Copying *{}* files...'.format(file_type))
+            print('   {} Copying *{}* files...'.format('DRY_RUN:' if dry_run else '', file_type))
             sys.stdout.flush()
         else:
             continue
@@ -74,32 +74,41 @@ def main(overwrite=False, verbose=False):
             # Create the parent directory if it doesn't exist
             dest_dirname = os.path.dirname(dest_file_path)
             if dest_dirname and not os.path.isdir(dest_dirname):
-                try:
-                    os.makedirs(dest_dirname)
-                    print('        Created directory {}...'.format(dest_dirname))
-                    sys.stdout.flush()
-                except OSError:
-                    print('        Error creating {}: try running with "sudo"'.format(dest_dirname))
-                    sys.stdout.flush()
-                    continue
+                # Don't actually *do* anything if dry_run option is enabled
+                if dry_run:
+                    print('     DRY_RUN: Creating directory {}...'.format(dest_dirname))
+                else:
+                    try:
+                        os.makedirs(dest_dirname)
+                        print('        Created directory {}...'.format(dest_dirname))
+                        sys.stdout.flush()
+                    except OSError:
+                        print('        Error creating {}: try running with "sudo"'.format(dest_dirname))
+                        sys.stdout.flush()
+                        continue
 
             # Copy the file to its destination. Handle clobbering, etc...
             if overwrite or not os.path.isfile(dest_file_path):
-                try:
-                    shutil.copyfile(file_path, dest_file_path)
-                    if verbose:
-                        print('        ...', dest_file_path)
+                # Don't actually *do* anything if dry_run option is enabled
+                if dry_run:
+                    print('     DRY_RUN: Copying {} to {}...'.format(file_path, dest_file_path))
+                else:
+                    try:
+                        shutil.copyfile(file_path, dest_file_path)
+                        if verbose:
+                            print('        ...', dest_file_path)
+                            sys.stdout.flush()
+                    except IOError:
+                        print('        Error copying to {}: try running with "sudo"'.format(dest_file_path))
                         sys.stdout.flush()
-                except IOError:
-                    print('        Error copying to {}: try running with "sudo"'.format(dest_file_path))
-                    sys.stdout.flush()
-                    continue
+                        continue
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Install config files into their appropriate locations.')
     parser.add_argument('-f', '--force', action='store_true', help='Overwrite existing files')
     parser.add_argument('-v', '--verbose', action='store_true', help='Print each file path after copying')
+    parser.add_argument('-d', '--dry-run', action='store_true', help='Show what will be done by this script, without actually doing it')
     args = parser.parse_args()
 
-    main(args.force, args.verbose)
+    main(args.force, args.verbose, args.dry_run)
