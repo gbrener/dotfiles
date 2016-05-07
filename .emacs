@@ -72,7 +72,12 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
- '(dired-listing-switches (concat "-vAlhF" (if (eq system-type 'darwin) "" " --time-style=long-iso")))
+ '(dired-listing-switches
+   (concat "-vAlhF"
+           (if
+               (eq system-type
+                   (quote darwin))
+               "" " --time-style=long-iso")))
  '(electric-pair-mode t)
  '(file-name-shadow-mode t)
  '(frame-background-mode (quote dark))
@@ -121,4 +126,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ '(region ((t (:background "blue" :foreground "#f6f3e8")))))
