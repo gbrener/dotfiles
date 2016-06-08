@@ -2,7 +2,7 @@
 set bell-style visual
 
 # Use ... for common prefixes longer than N
-set completion-prefix-display-length 5
+#set completion-prefix-display-length 5
 
 # Editing mode is Emacs
 set editing-mode emacs
