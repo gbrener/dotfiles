@@ -42,6 +42,8 @@
 (require 'gb_rect-select)
 (require 'gb_annotate)
 (require 'gb_xt-mouse)
+(require 'gb_web)
+(require 'gb_define-word)
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -78,7 +80,6 @@
                (eq system-type
                    (quote darwin))
                "" " --time-style=long-iso")))
- '(electric-pair-mode t)
  '(file-name-shadow-mode t)
  '(frame-background-mode (quote dark))
  '(global-font-lock-mode t)
@@ -103,7 +104,6 @@
  '(menu-bar-mode nil)
  '(occur-hook (quote ((lambda nil (occur-rename-buffer t)))))
  '(org-agenda-files nil)
- '(python-indent 4)
  '(python-indent-offset 4)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 1000000)
@@ -126,4 +126,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(region ((t (:background "blue" :foreground "#f6f3e8")))))
+ '(region ((t (:background "sky blue" :foreground "black")))))
