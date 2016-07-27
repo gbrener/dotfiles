@@ -5,62 +5,27 @@
 
 
 (defconst ELISP-DIR  "~/.emacs.d/elisp"
-  "Emacs library directory")
+  "Directory containing Emacs libraries")
 
 (defconst PLUGINS-DIR
   "~/.emacs.d/plugins"
-  "Emacs plugins directory (elisp files that don't have 'modes')")
+  "Directory containing Emacs plugins (libraries that don't have 'modes')")
 
 (defconst THEMES-DIR
-  "~/.emacs.d/themes/"
-  "Emacs themes directory")
+  "~/.emacs.d/themes"
+  "Directory containing Emacs themes")
+
+(defconst BACKUPS-DIR
+  "~/.emacs.d/backups"
+  "Directory where backup files are stored")
 
 ;; Create the elisp and plugins directories if they don't already exist
-(when (not (file-exists-p ELISP-DIR))
-  (make-directory ELISP-DIR t))
-(when (not (file-exists-p PLUGINS-DIR))
-  (make-directory PLUGINS-DIR t))
+(dolist (dir (list ELISP-DIR PLUGINS-DIR THEMES-DIR BACKUPS-DIR))
+  (when (not (file-exists-p dir))
+    (make-directory dir t)))
 
 ;; Add elisp directory to load-path
 (add-to-list 'load-path ELISP-DIR)
-
-;; Add themes direcory to load-path
-(add-to-list 'custom-theme-load-path THEMES-DIR)
-
-;; Most of the features below are provided from "elisp" directory
-(require 'gb_utils)
-(require 'gb_keybindings)
-(require 'gb_shell)
-(require 'gb_org)
-(require 'gb_yasnippet)
-(require 'gb_flyspell)
-(require 'gb_erlang)
-(require 'gb_markdown)
-(require 'gb_yaml)
-(require 'gb_json)
-(require 'gb_use-package)
-(require 'gb_rect-select)
-(require 'gb_annotate)
-(require 'gb_xt-mouse)
-(require 'gb_web)
-(require 'gb_define-word)
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
-
-;; For the non-local packages, install them automatically.
-;; This is handy for when a package has a lot of dependencies.
-(when (connected-to-internet-p)
-  (package-initialize)
-  (package-refresh-contents)
-  (use-package magit :ensure t)
-  (use-package ein :ensure t))
-
-;; Load theme
-(load-theme 'wombat t)
-;(load-theme 'badwolf t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -70,10 +35,12 @@
  '(auto-compression-mode t)
  '(auto-insert-mode t)
  '(auto-insert-query t)
- '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backups"))))
+ '(backup-directory-alist (quote ((".*" . BACKUPS-DIR))))
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
+ '(custom-enabled-themes (quote (wombat)))
+ '(custom-theme-load-path (quote (THEMES-DIR custom-theme-directory t)))
  '(dired-listing-switches
    (concat "-vAlhF"
            (if
@@ -88,6 +55,7 @@
  '(history-length 1000)
  '(ido-create-new-buffer (quote always))
  '(ido-enable-flex-matching t)
+ '(ido-everywhere t)
  '(ido-mode (quote both) nil (ido))
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (getenv "USER"))
