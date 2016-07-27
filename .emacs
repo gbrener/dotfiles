@@ -35,7 +35,7 @@
  '(auto-compression-mode t)
  '(auto-insert-mode t)
  '(auto-insert-query t)
- '(backup-directory-alist (quote ((".*" . BACKUPS-DIR))))
+ '(backup-directory-alist (list (cons ".*" BACKUPS-DIR)))
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
