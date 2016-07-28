@@ -27,6 +27,37 @@
 ;; Add elisp directory to load-path
 (add-to-list 'load-path ELISP-DIR)
 
+;; Most of the features below are provided from "elisp" directory
+(require 'gb_utils)
+(require 'gb_keybindings)
+(require 'gb_shell)
+(require 'gb_org)
+(require 'gb_yasnippet)
+(require 'gb_flyspell)
+(require 'gb_erlang)
+(require 'gb_markdown)
+(require 'gb_yaml)
+(require 'gb_json)
+(require 'gb_use-package)
+(require 'gb_rect-select)
+(require 'gb_annotate)
+(require 'gb_xt-mouse)
+(require 'gb_web)
+(require 'gb_define-word)
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
+
+;; For the non-local packages, install them automatically.
+;; This is handy for when a package has a lot of dependencies.
+(when (connected-to-internet-p)
+  (package-initialize)
+  (package-refresh-contents)
+  (use-package magit :ensure t)
+  (use-package ein :ensure t))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -40,7 +71,8 @@
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
  '(custom-enabled-themes (quote (wombat)))
- '(custom-theme-load-path (quote (THEMES-DIR custom-theme-directory t)))
+ '(custom-safe-themes (quote (wombat default)))
+ '(custom-theme-directory "THEMES-DIR")
  '(dired-listing-switches
    (concat "-vAlhF"
            (if
@@ -72,6 +104,17 @@
  '(menu-bar-mode nil)
  '(occur-hook (quote ((lambda nil (occur-rename-buffer t)))))
  '(org-agenda-files nil)
+ '(org-catch-invisible-edits (quote smart))
+ '(org-closed-keep-when-no-todo t)
+ '(org-completion-use-ido t)
+ '(org-default-notes-file "~/notes.org")
+ '(org-enforce-todo-checkbox-dependencies t)
+ '(org-enforce-todo-dependencies t)
+ '(org-fast-tag-selection-single-key t)
+ '(org-todo-keywords
+   (quote
+    ((sequence "TODO(t)" "BACKLOG(b)" "|" "DONE(d)")
+     (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)"))))
  '(python-indent-offset 4)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 1000000)
