@@ -13,6 +13,8 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\C-cg" 'org-feed-update-all)
+(global-set-key "\C-cG" 'org-feed-goto-inbox)
 
 ;; Remap C-M-spacebar and C-M-@ as "canonically-space-region or just-one-space", whichever is appropriate
 (global-unset-key (kbd "C-M-SPC"))
