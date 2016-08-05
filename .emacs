@@ -57,7 +57,9 @@
   (package-refresh-contents)
   (use-package flycheck :ensure t :init (global-flycheck-mode))
   (use-package magit :ensure t)
-  (use-package ein :ensure t))
+  (use-package jedi :ensure t :init (progn (add-hook 'python-mode-hook 'jedi:setup)
+                                           (jedi:install-server)))
+  (use-package ein :ensure t :init (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -100,6 +102,7 @@
 ;;
 
 ")
+ '(jedi:complete-on-dot t)
  '(line-move-visual nil)
  '(make-backup-files t)
  '(mark-ring-max 23)
