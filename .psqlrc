@@ -1,0 +1,32 @@
+-- Show connection info
+\conninfo
+
+-- Show null values explicitly (rather than as empty space)
+\pset null 'NULL'
+
+-- Show timings after each commands
+\timing
+
+-- Switch to expanded table format when there's a lot of data
+\x auto
+
+-- Verbose error reports
+\set VERBOSITY verbose
+
+-- Use a separate history file per database
+\set HISTFILE ~/.psql_history- :DBNAME
+
+-- Similar to Bash setting
+\set HISTCONTROL ignoredups
+
+-- Offer to rollback errors when in interactive sessions
+\set ON_ERROR_ROLLBACK interactive
+
+-- Auto-complete 
+\set COMP_KEYWORD_CASE preserve-lower
+
+-- Pager is not necessary
+\pset pager off
+
+-- Take 10 tries of Ctrl-D to exit
+\set IGNOREEOF 10
