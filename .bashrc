@@ -1,7 +1,7 @@
-#export LD_LIBRARY_PATH=/usr/local/pgsql/lib
-export VISUAL="emacsclient -c -s /tmp/emacs1000/server -a ''"
+export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
+export VISUAL="emacsclient -c -a ''"
 export EDITOR="$VISUAL"
-export LESS="-MQR" # Enable long-prompt, quiet-operation, and ANSI colors in "less"
+export LESS="-MQR"
 export HISTCONTROL=ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
 if [ `uname` = Linux ]; then
@@ -9,10 +9,9 @@ if [ `uname` = Linux ]; then
 else
     export HISTSIZE=10
 fi
-export MOZ_USE_OMTC=1 # Enable hardware acceleration in Firefox
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
-export PATH="$HOME/anaconda/bin:/usr/local/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
 
 set -o ignoreeof # Prevent accidental logouts when hitting C-d
 set -o notify # Notify me asynchronously when background jobs finish
@@ -40,7 +39,6 @@ if [ `uname` = Linux ]; then
 else
     alias ls='\ls -AFgh'
 fi
-alias install_pkg='makepkg -sri'
 
 function timer_start {
   timer=${timer:-$SECONDS}
@@ -61,6 +59,6 @@ if [ $TERM = xterm ]; then
 else
     unset UPDATE_XTERM_TITLE
 fi
-export PS1='${UPDATE_XTERM_TITLE}[last: ${timer_show}s] \[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
+export PS1='${UPDATE_XTERM_TITLE}[${timer_show}s] \[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
 
 [[ -r ~/.bashrc_home ]] && . ~/.bashrc_home
