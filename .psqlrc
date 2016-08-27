@@ -7,7 +7,8 @@
 -- Show timings after each commands
 \timing
 
--- Switch to expanded table format when there's a lot of data
+-- Switch to expanded table format when the column is more than 1B chars
+\pset columns 1000000000
 \x auto
 
 -- Verbose error reports
