@@ -1,7 +1,7 @@
 export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
 export VISUAL="emacsclient -c -a ''"
 export EDITOR="$VISUAL"
-export LESS="-MQR"
+export LESS="-iMQRSW"
 export HISTCONTROL=ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
 if [ `uname` = Linux ]; then

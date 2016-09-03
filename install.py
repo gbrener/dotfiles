@@ -15,19 +15,14 @@ from __future__ import print_function, unicode_literals
 import argparse
 import platform
 import subprocess
-import os
 import shutil
-import sys
+import os
+import filecmp
 
 
 # The system name, e.g. "Linux", "Darwin", "posix", etc...
 SYS_NAME = platform.system()
 
-# This dict's keys represent the types of config files,
-# and its values contain the following info:
-#   1. Whether it's appropriate to copy these files,
-#   2. The shell command to find the files of the config file-type, and
-#   3. The top-level destination directory
 DOTFILE_SPECS = {
     'home': (True,
              'find . -maxdepth 1 -type f -name ".*" -a -not -name ".git*"',
@@ -47,68 +42,47 @@ DOTFILE_SPECS = {
 }
 
 
-def main(overwrite=False, verbose=False, dry_run=False):
-    """Copy the files to their appropriate locations.
-    """
-    print('Copying files to appropriate system locations:')
-    sys.stdout.flush()
-
+def main(verbose=False, dry_run=False):
     for file_type, (condition, cmd, dest_dir) in DOTFILE_SPECS.items():
-        # Skip processing this file_type if appropriate
+        # Skip copying anything if condition is not met.
         if not condition:
             continue
 
-        # Retrieve the files to be copied
-        file_paths_str = subprocess.check_output(cmd, shell=True)
-        file_paths = filter(None, file_paths_str.strip().split(b'\n'))
+        # Find files to copy, and loop over each one.
+        output = subprocess.check_output(cmd, shell=True)
+        for src_fpath in output.rstrip().split(b'\n'):
+            # Compute destination path
+            dst_fpath = os.path.normpath(os.path.expanduser(os.path.join(dest_dir, src_fpath)))
 
-        if file_paths:
-            print('   {} Copying *{}* files...'.format('DRY_RUN:' if dry_run else '', file_type))
-            sys.stdout.flush()
-        else:
-            continue
+            # Skip file if it already exists and didn't change.
+            # If it did change, show the diff before clobbering.
+            if os.path.isfile(dst_fpath):
+                files_are_eq = filecmp.cmp(src_fpath, dst_fpath)
+                if files_are_eq:
+                    continue
+                elif verbose:
+                    diff_cmd = 'diff {} {}'.format(src_fpath.decode('utf-8'), dst_fpath.decode('utf-8'))
+                    print('\n'+diff_cmd)
+                    subprocess.call(diff_cmd, shell=True)
+                    print()
 
-        for file_path in map(os.path.normpath, file_paths):
-            dest_file_path = os.path.expanduser(os.path.join(dest_dir, file_path))
+            # Create directories as needed.
+            parent_dir = os.path.dirname(dst_fpath)
+            if not os.path.isdir(parent_dir):
+                print('mkdir -p {}'.format(parent_dir.decode('utf-8')))
+                if not dry_run:
+                    os.makedirs(parent_dir)
 
-            # Create the parent directory if it doesn't exist
-            dest_dirname = os.path.dirname(dest_file_path)
-            if dest_dirname and not os.path.isdir(dest_dirname):
-                # Don't actually *do* anything if dry_run option is enabled
-                if dry_run:
-                    print('     DRY_RUN: Creating directory {}...'.format(dest_dirname))
-                else:
-                    try:
-                        os.makedirs(dest_dirname)
-                        print('        Created directory {}...'.format(dest_dirname))
-                        sys.stdout.flush()
-                    except OSError:
-                        print('        Error creating {}: try running with "sudo"'.format(dest_dirname))
-                        sys.stdout.flush()
-                        continue
-
-            # Copy the file to its destination. Handle clobbering, etc...
-            if overwrite or not os.path.isfile(dest_file_path):
-                # Don't actually *do* anything if dry_run option is enabled
-                if dry_run:
-                    print('     DRY_RUN: Copying {} to {}...'.format(file_path, dest_file_path))
-                else:
-                    try:
-                        shutil.copyfile(file_path, dest_file_path)
-                        if verbose:
-                            print('        ...', dest_file_path)
-                            sys.stdout.flush()
-                    except IOError:
-                        print('        Error copying to {}: try running with "sudo"'.format(dest_file_path))
-                        sys.stdout.flush()
-                        continue
+            # Copy files
+            print('cp {} {}'.format(src_fpath.decode('utf-8'), dst_fpath.decode('utf-8')))
+            if not dry_run:
+                shutil.copy(src_fpath, dst_fpath)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Install config files into their appropriate locations.')
-    parser.add_argument('-f', '--force', action='store_true', help='Overwrite existing files')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Print each file path after copying')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Show diff before clobbering')
     parser.add_argument('-d', '--dry-run', action='store_true', help='Show what will be done by this script, without actually doing it')
     args = parser.parse_args()
 
-    main(args.force, args.verbose, args.dry_run)
+    main(args.verbose, args.dry_run)
