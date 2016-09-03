@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-#  ~~~
-#  ANNOTATION: 
 
 
 """Install config files into their appropriate locations.
@@ -25,32 +23,37 @@ SYS_NAME = platform.system()
 
 DOTFILE_SPECS = {
     'home': (True,
+             # Hidden files in the current directory.
              'find . -maxdepth 1 -type f -name ".*" -a -not -name ".git*"',
-             b'~'),
+             '~'),
 
     'emacs': (True,
+              # Emacs lisp and compiled emacs lisp files.
               'find .emacs.d -type f -name "*.el" -o -name "*.elc"',
-              b'~'),
+              '~'),
 
     'systemd': (SYS_NAME == 'Linux',
+                # Systemd .service files
                 'find etc -type f -name "*.service"',
-                b'/'),
+                '/'),
 
     'launchd': (SYS_NAME == 'Darwin',
+                # Launchd .plist files
                 'find etc -type f -name "*.plist"',
-                b'/'),
+                '/'),
 }
 
 
 def main(verbose=False, dry_run=False):
-    for file_type, (condition, cmd, dest_dir) in DOTFILE_SPECS.items():
+    """Main function."""
+    for _file_type, (condition, cmd, dest_dir) in DOTFILE_SPECS.items():
         # Skip copying anything if condition is not met.
         if not condition:
             continue
 
         # Find files to copy, and loop over each one.
         output = subprocess.check_output(cmd, shell=True)
-        for src_fpath in output.rstrip().split(b'\n'):
+        for src_fpath in output.decode('utf-8').rstrip().split('\n'):
             # Compute destination path
             dst_fpath = os.path.normpath(os.path.expanduser(os.path.join(dest_dir, src_fpath)))
 
@@ -61,7 +64,7 @@ def main(verbose=False, dry_run=False):
                 if files_are_eq:
                     continue
                 elif verbose:
-                    diff_cmd = 'diff {} {}'.format(src_fpath.decode('utf-8'), dst_fpath.decode('utf-8'))
+                    diff_cmd = 'diff {} {}'.format(src_fpath, dst_fpath)
                     print('\n'+diff_cmd)
                     subprocess.call(diff_cmd, shell=True)
                     print()
@@ -69,20 +72,21 @@ def main(verbose=False, dry_run=False):
             # Create directories as needed.
             parent_dir = os.path.dirname(dst_fpath)
             if not os.path.isdir(parent_dir):
-                print('mkdir -p {}'.format(parent_dir.decode('utf-8')))
+                print('mkdir -p {}'.format(parent_dir))
                 if not dry_run:
                     os.makedirs(parent_dir)
 
             # Copy files
-            print('cp {} {}'.format(src_fpath.decode('utf-8'), dst_fpath.decode('utf-8')))
+            print('cp {} {}'.format(src_fpath, dst_fpath))
             if not dry_run:
                 shutil.copy(src_fpath, dst_fpath)
 
 
+# pylint: disable=invalid-name
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Install config files into their appropriate locations.')
+    parser = argparse.ArgumentParser(description='Install config files to appropriate locations.')
     parser.add_argument('-v', '--verbose', action='store_true', help='Show diff before clobbering')
-    parser.add_argument('-d', '--dry-run', action='store_true', help='Show what will be done by this script, without actually doing it')
+    parser.add_argument('-d', '--dry-run', action='store_true', help='Don\'t actually do the work.')
     args = parser.parse_args()
 
     main(args.verbose, args.dry_run)

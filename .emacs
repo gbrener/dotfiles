@@ -86,7 +86,6 @@
  '(frame-background-mode (quote dark))
  '(global-font-lock-mode t)
  '(global-subword-mode t)
- '(global-visual-line-mode t)
  '(history-delete-duplicates t)
  '(history-length 1000)
  '(ido-create-new-buffer (quote always))
