@@ -82,8 +82,8 @@ def main(verbose=False, dry_run=False):
                 shutil.copy(src_fpath, dst_fpath)
 
 
-# pylint: disable=invalid-name
 if __name__ == '__main__':
+    # pylint: disable=invalid-name
     parser = argparse.ArgumentParser(description='Install config files to appropriate locations.')
     parser.add_argument('-v', '--verbose', action='store_true', help='Show diff before clobbering')
     parser.add_argument('-d', '--dry-run', action='store_true', help='Don\'t actually do the work.')

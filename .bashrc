@@ -1,17 +1,49 @@
-export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
-export VISUAL="emacsclient -c -a ''"
-export EDITOR="$VISUAL"
-export LESS="-iMQRSW"
-export HISTCONTROL=ignoreboth
-export HISTIGNORE='[bf]g:exit:history:history *'
+
 if [ `uname` = Linux ]; then
     export HISTSIZE=1000
 else
     export HISTSIZE=10
 fi
-export PYTHONSTARTUP="$HOME/.pythonrc.py"
+export HISTCONTROL=ignoreboth
+export HISTIGNORE='[bf]g:exit:history:history *'
 
-export PATH="/usr/local/bin:$PATH"
+function timer_start {
+  timer=${timer:-$SECONDS}
+}
+
+function timer_stop {
+  timer_show=$(($SECONDS - $timer))
+  unset timer
+}
+
+# Call timer_start at the beginning of commands and scripts
+set -o functrace
+trap 'timer_start' DEBUG
+export PROMPT_COMMAND=timer_stop
+
+# PS1 stuff
+if [ $TERM = xterm ]; then
+    UPDATE_XTERM_TITLE='\e]0;$HOSTNAME\007'
+else
+    unset UPDATE_XTERM_TITLE
+fi
+COLOR_NORMAL="\[\033[0m\]"
+COLOR_LIGHTRED="\[\033[31m\]"
+COLOR_GREEN="\[\033[32m\]"
+COLOR_YELLOW="\[\033[33m\]"
+STATUS_OK=${COLOR_YELLOW}'ok'${COLOR_NORMAL}
+STATUS_NOK=${COLOR_LIGHTRED}'err'${COLOR_NORMAL}
+STATUS="\`if [ \$? = 0 ]; then echo ${STATUS_OK}; else echo ${STATUS_NOK}; fi\`"
+export PS1='${UPDATE_XTERM_TITLE}['${STATUS}' ${timer_show}s] '${COLOR_GREEN}'\u@\H \w\n: '${COLOR_NORMAL}
+
+# Remap CTRL to CAPS-LOCK
+if [ `uname` = Linux ]; then
+    if [ -x /usr/bin/setxkbmap ]; then
+        /usr/bin/setxkbmap -option ctrl:nocaps
+    else
+        echo "Warning: setxkbmap not available. Caps Lock remapping unsuccessful."
+    fi
+fi
 
 set -o ignoreeof # Prevent accidental logouts when hitting C-d
 set -o notify # Notify me asynchronously when background jobs finish
@@ -39,26 +71,5 @@ if [ `uname` = Linux ]; then
 else
     alias ls='\ls -AFgh'
 fi
-
-function timer_start {
-  timer=${timer:-$SECONDS}
-}
-
-function timer_stop {
-  timer_show=$(($SECONDS - $timer))
-  unset timer
-}
-
-# Call timer_start at the beginning of commands and scripts
-set -o functrace
-trap 'timer_start' DEBUG
-export PROMPT_COMMAND=timer_stop
-PROMPT_COLOR=32 # green
-if [ $TERM = xterm ]; then
-    UPDATE_XTERM_TITLE='\e]0;$HOSTNAME\007'
-else
-    unset UPDATE_XTERM_TITLE
-fi
-export PS1='${UPDATE_XTERM_TITLE}[${timer_show}s] \[\033[${PROMPT_COLOR}m\]\u@\H \w\n: \[\033[0m\]'
 
 [[ -r ~/.bashrc_home ]] && . ~/.bashrc_home
