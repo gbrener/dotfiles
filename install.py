@@ -68,8 +68,8 @@ def main(verbose=False, dry_run=False):
                 if files_are_eq:
                     continue
                 elif verbose:
-                    diff_cmd = 'DEBUG: diff {} {}'.format(src_fpath, dst_fpath)
-                    print('\n'+diff_cmd)
+                    diff_cmd = 'diff {} {}'.format(src_fpath, dst_fpath)
+                    print('\nDEBUG: '+diff_cmd)
                     subprocess.call(diff_cmd, shell=True)
                     print()
 
