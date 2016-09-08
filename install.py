@@ -53,6 +53,10 @@ def main(verbose=False, dry_run=False):
 
         # Find files to copy, and loop over each one.
         output = subprocess.check_output(cmd, shell=True)
+        if not output:
+            print('WARNING: no output for cmd `{}`'.format(cmd))
+            continue
+
         for src_fpath in output.decode('utf-8').rstrip().split('\n'):
             # Compute destination path
             dst_fpath = os.path.normpath(os.path.expanduser(os.path.join(dest_dir, src_fpath)))
@@ -64,7 +68,7 @@ def main(verbose=False, dry_run=False):
                 if files_are_eq:
                     continue
                 elif verbose:
-                    diff_cmd = 'diff {} {}'.format(src_fpath, dst_fpath)
+                    diff_cmd = 'DEBUG: diff {} {}'.format(src_fpath, dst_fpath)
                     print('\n'+diff_cmd)
                     subprocess.call(diff_cmd, shell=True)
                     print()
@@ -72,12 +76,12 @@ def main(verbose=False, dry_run=False):
             # Create directories as needed.
             parent_dir = os.path.dirname(dst_fpath)
             if not os.path.isdir(parent_dir):
-                print('mkdir -p {}'.format(parent_dir))
+                print('DEBUG: mkdir -p {}'.format(parent_dir))
                 if not dry_run:
                     os.makedirs(parent_dir)
 
             # Copy files
-            print('cp {} {}'.format(src_fpath, dst_fpath))
+            print('DEBUG: cp {} {}'.format(src_fpath, dst_fpath))
             if not dry_run:
                 shutil.copy(src_fpath, dst_fpath)
 
@@ -86,7 +90,13 @@ if __name__ == '__main__':
     # pylint: disable=invalid-name
     parser = argparse.ArgumentParser(description='Install config files to appropriate locations.')
     parser.add_argument('-v', '--verbose', action='store_true', help='Show diff before clobbering')
-    parser.add_argument('-d', '--dry-run', action='store_true', help='Don\'t actually do the work.')
+    parser.add_argument('-d', '--dry-run', action='store_true', help='Don\'t actually do the work')
     args = parser.parse_args()
+
+    if args.verbose:
+        print('INFO: --verbose option detected. Diffs will be displayed.')
+
+    if args.dry_run:
+        print('INFO: --dry-run option detected. Commands will not be executed.')
 
     main(args.verbose, args.dry_run)
