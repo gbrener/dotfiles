@@ -56,6 +56,7 @@ alias gdb='\gdb --quiet'
 alias hist='history | less'
 alias l='\ls -1F'
 alias ns='netstat -xaupen'
+alias which='type -a'
 if [ `uname` = Linux ]; then
     alias ls='\ls -AFghv --time-style=long-iso'
 else
