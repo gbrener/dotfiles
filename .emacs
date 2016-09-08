@@ -84,6 +84,8 @@
                "" " --time-style=long-iso")))
  '(file-name-shadow-mode t)
  '(frame-background-mode (quote dark))
+ '(gdb-many-windows t)
+ '(gdb-speedbar-auto-raise t)
  '(global-font-lock-mode t)
  '(global-subword-mode t)
  '(history-delete-duplicates t)
