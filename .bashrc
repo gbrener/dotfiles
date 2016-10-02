@@ -50,11 +50,10 @@ shopt -s -q checkwinsize # Update rows/columns as necessary after each cmd
 
 alias emacs=$VISUAL
 alias rm='\rm -iv'
-alias cp='\cp -iv'
 alias mv='\mv -iv'
 alias gdb='\gdb --quiet'
 alias hist='history | less'
-alias l='\ls -1F'
+alias l='\ls -1Fa'
 alias ns='netstat -xaupen'
 alias which='type -a'
 if [ `uname` = Linux ]; then
