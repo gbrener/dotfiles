@@ -73,7 +73,7 @@ def main(verbose=False, dry_run=False):
                     subprocess.call(diff_cmd, shell=True)
                     print()
 
-            # Create directories as needed.
+            # Create directories as needed. 
             parent_dir = os.path.dirname(dst_fpath)
             if not os.path.isdir(parent_dir):
                 print('DEBUG: mkdir -p {}'.format(parent_dir))
