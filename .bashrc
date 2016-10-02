@@ -2,7 +2,7 @@
 if [ `uname` = Linux ]; then
     export HISTSIZE=1000
 else
-    export HISTSIZE=10
+    export HISTSIZE=100
 fi
 export HISTCONTROL=ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
