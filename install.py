@@ -32,11 +32,6 @@ DOTFILE_SPECS = {
               'find .emacs.d -type f -name "*.el" -o -name "*.elc"',
               '~'),
 
-    'ipython': (True,
-                # IPython config files
-                'find .ipython',
-                '~'),
-
     'systemd': (SYS_NAME == 'Linux',
                 # Systemd .service files
                 'find etc -type f -name "*.service"',

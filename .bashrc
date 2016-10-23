@@ -66,10 +66,10 @@ if [ `uname` = Linux ]; then
 else
     alias ls='\ls -AFgh'
 fi
-alias ipython='\ipython --profile=emacs'
+alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
 
-[ `which xmodmap 2>/dev/null` -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+[ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
 [ -r ~/.bashrc_home ] && . ~/.bashrc_home
 [ -r ~/.bashrc_work ] && . ~/.bashrc_work
