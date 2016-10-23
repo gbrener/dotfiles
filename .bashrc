@@ -69,7 +69,7 @@ fi
 alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
 
-[ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+[ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap 2>/dev/null
 
 [ -r ~/.bashrc_home ] && . ~/.bashrc_home
 [ -r ~/.bashrc_work ] && . ~/.bashrc_work
