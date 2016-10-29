@@ -23,12 +23,12 @@ SYS_NAME = platform.system()
 
 DOTFILE_SPECS = {
     'home': (True,
-             # Hidden files in the current directory.
+             # Hidden files in the current directory
              'find . -maxdepth 1 -type f -name ".*" -a -not -name ".git*"',
              '~'),
 
     'emacs': (True,
-              # Emacs lisp and compiled emacs lisp files.
+              # Emacs lisp and compiled emacs lisp files
               'find .emacs.d -type f -name "*.el" -o -name "*.elc"',
               '~'),
 
@@ -47,43 +47,49 @@ DOTFILE_SPECS = {
 def main(verbose=False, dry_run=False):
     """Main function."""
     for _file_type, (condition, cmd, dest_dir) in DOTFILE_SPECS.items():
-        # Skip copying anything if condition is not met.
+        # Skip copying anything if condition is not met
         if not condition:
             continue
 
-        # Find files to copy, and loop over each one.
+        # Find files and dirs to copy, and loop over each one
         output = subprocess.check_output(cmd, shell=True)
         if not output:
             print('WARNING: no output for cmd `{}`'.format(cmd))
             continue
 
-        for src_fpath in output.decode('utf-8').rstrip().split('\n'):
+        for src_path in output.decode('utf-8').rstrip().split('\n'):
             # Compute destination path
-            dst_fpath = os.path.normpath(os.path.expanduser(os.path.join(dest_dir, src_fpath)))
+            dst_path = os.path.normpath(os.path.expanduser(os.path.join(dest_dir, src_path)))
 
-            # Skip file if it already exists and didn't change.
-            # If it did change, show the diff before clobbering.
-            if os.path.isfile(dst_fpath):
-                files_are_eq = filecmp.cmp(src_fpath, dst_fpath)
+            # Skip file if it already exists and didn't change;
+            # if it did change, show the diff before clobbering
+            if os.path.isfile(dst_path):
+                files_are_eq = filecmp.cmp(src_path, dst_path, shallow=False)
                 if files_are_eq:
                     continue
                 elif verbose:
-                    diff_cmd = 'diff {} {}'.format(src_fpath, dst_fpath)
+                    diff_cmd = 'diff {} {}'.format(src_path, dst_path)
                     print('\nDEBUG: '+diff_cmd)
                     subprocess.call(diff_cmd, shell=True)
                     print()
 
-            # Create directories as needed.
-            parent_dir = os.path.dirname(dst_fpath)
+            # Create directories as needed
+            parent_dir = os.path.dirname(dst_path)
             if not os.path.isdir(parent_dir):
                 print('DEBUG: mkdir -p {}'.format(parent_dir))
                 if not dry_run:
                     os.makedirs(parent_dir)
 
-            # Copy files
-            print('DEBUG: cp {} {}'.format(src_fpath, dst_fpath))
-            if not dry_run:
-                shutil.copy(src_fpath, dst_fpath)
+            # Create the directory or copy the file
+            if os.path.isdir(src_path):
+                if not os.path.isdir(dst_path):
+                    print('DEBUG: mkdir -p {}'.format(dst_path))
+                    if not dry_run:
+                        os.makedirs(dst_path)
+            else:
+                print('DEBUG: cp {} {}'.format(src_path, dst_path))
+                if not dry_run:
+                    shutil.copy(src_path, dst_path)
 
 
 if __name__ == '__main__':

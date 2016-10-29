@@ -1,3 +1,7 @@
+# For M-x shell
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
+export PATH="/usr/local/bin:$PATH"
+
 # Bash-specific environment variables
 if [ `uname` = Linux ]; then
     export HISTSIZE=1000
@@ -49,17 +53,22 @@ shopt -s -q lithist # Store multi-line cmds with newlines instead of ;
 shopt -s -q checkwinsize # Update rows/columns as necessary after each cmd
 
 alias emacs=$VISUAL
+alias which='type -a'
 alias rm='\rm -iv'
 alias mv='\mv -iv'
 alias gdb='\gdb --quiet'
 alias hist='history | less'
 alias l='\ls -1Fa'
 alias ns='netstat -xaupen'
-alias which='type -a'
 if [ `uname` = Linux ]; then
     alias ls='\ls -AFghv --time-style=long-iso'
 else
     alias ls='\ls -AFgh'
 fi
+alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
-[[ -r ~/.bashrc_home ]] && . ~/.bashrc_home
+
+[ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+
+[ -r ~/.bashrc_home ] && . ~/.bashrc_home
+[ -r ~/.bashrc_work ] && . ~/.bashrc_work
