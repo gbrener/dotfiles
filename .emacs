@@ -83,6 +83,7 @@
                    (quote darwin))
                "" " --time-style=long-iso")))
  '(file-name-shadow-mode t)
+ '(fill-column 80)
  '(frame-background-mode (quote dark))
  '(gdb-many-windows t)
  '(gdb-speedbar-auto-raise t)
