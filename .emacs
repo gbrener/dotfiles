@@ -101,7 +101,6 @@
 ;;
 
 ")
- '(jedi:complete-on-dot t)
  '(line-move-visual nil)
  '(make-backup-files t)
  '(mark-ring-max 23)

@@ -39,7 +39,7 @@ DOTFILE_SPECS = {
 
     'launchd': (SYS_NAME == 'Darwin',
                 # Launchd .plist files
-                'find etc -type f -name "*.plist"',
+                'find Library -type f -name "*.plist"',
                 '/'),
 }
 

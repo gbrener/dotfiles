@@ -44,8 +44,7 @@ alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
 
 ### PROMPT ###
-# Call timer-start() at the beginning of commands and scripts, and
-# timer-stop() when each command finishes.
+## Inspired by Ville Laurikari's SO answer: http://stackoverflow.com/a/1862762
 function timer-start {
     timer=${timer:-$SECONDS}
 }
@@ -59,24 +58,18 @@ function timer-stop {
     fi
     unset timer
 }
-set -o functrace
+set -o functrace # Enable traps to be inherited by shell functions
 trap 'timer-start' DEBUG
 export PROMPT_COMMAND=timer-stop
 
-# Update the prompt
-if [ "$TERM" = xterm ]; then
-    UPDATE_XTERM_TITLE='\e]0;$HOSTNAME\007'
-else
-    unset UPDATE_XTERM_TITLE
-fi
 COLOR_NORMAL="\[\033[0m\]"
 COLOR_LIGHTRED="\[\033[31m\]"
 COLOR_GREEN="\[\033[32m\]"
 COLOR_YELLOW="\[\033[33m\]"
-STATUS_OK=${COLOR_YELLOW}'ok'${COLOR_NORMAL}
-STATUS_NOK=${COLOR_LIGHTRED}'err'${COLOR_NORMAL}
+STATUS_OK=${COLOR_YELLOW}ok${COLOR_NORMAL}
+STATUS_NOK=${COLOR_LIGHTRED}err${COLOR_NORMAL}
 STATUS="\`if [ \$? = 0 ]; then echo ${STATUS_OK}; else echo ${STATUS_NOK}; fi\`"
-export PS1='${UPDATE_XTERM_TITLE}['${STATUS}' ${TIMER_VALUE}] '${COLOR_GREEN}'\u@\H \w\n: '${COLOR_NORMAL}
+export PS1="[${STATUS} \${TIMER_VALUE}] ${COLOR_GREEN}\u@\H \w\n: ${COLOR_NORMAL}"
 
 
 
