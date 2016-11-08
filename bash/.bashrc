@@ -5,9 +5,9 @@ export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 # Bash-specific variables
 export HISTSIZE=10
-export HISTCONTROL=ignoreboth
+export HISTCONTROL=erasedups:ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
-
+export HISTTIMEFORMAT="%F %T "
 
 
 ### BASH OPTIONS ###
@@ -42,23 +42,29 @@ alias l='\ls -1F' # Much faster than "ls"
 alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
 
-
 ### PROMPT ###
 ## Inspired by Ville Laurikari's SO answer: http://stackoverflow.com/a/1862762
 function timer-start {
+    if [ -z "$last_cmd" ]; then
+        last_cmd="$BASH_COMMAND"
+    fi
     timer=${timer:-$SECONDS}
 }
 function timer-stop {
     local nsecs=$(($SECONDS - $timer))
-    TIMER_VALUE=${nsecs}s
+    TIMER_VALUE="${nsecs}s"
     if [ $nsecs -gt 3600 ]; then
         TIMER_VALUE="$(($nsecs / 3600))h$((($nsecs % 3600) / 60))m$((($nsecs % 3600) % 60))s"
+        ## Package is called "xorg-xmessage"
+        xmessage "\"$last_cmd\" took $TIMER_VALUE"
     elif [ $nsecs -gt 60 ]; then
         TIMER_VALUE="$(($nsecs / 60))m$(($nsecs % 60))s"
+        ## Package is called "xorg-xmessage"
+        xmessage "\"$last_cmd\" took $TIMER_VALUE"
     fi
     unset timer
+    unset last_cmd
 }
-set -o functrace # Enable traps to be inherited by shell functions
 trap 'timer-start' DEBUG
 export PROMPT_COMMAND=timer-stop
 
@@ -88,6 +94,8 @@ function checkout-pr {
 
 
 ### MISC ###
+[ -z $DISPLAY ] && export DISPLAY=:0
+[ -z $XAUTHORITY ] && export XAUTHORITY="$HOME/.Xauthority"
 [ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
 [ -r ~/.bashrc_home ] && . ~/.bashrc_home
