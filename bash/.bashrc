@@ -17,29 +17,13 @@ set -o nolog # Don't log history
 shopt -s -q cdspell # Spell-check paths
 if [ "${BASH_VERSINFO[0]}" -ge 4 ]; then
     shopt -s -q direxpand # Expand directories (>= v4)
-    shopt -s -q dirspell # Spell-check directories (>= v4) 
+    shopt -s -q dirspell # Spell-check directories (>= v4)
     shopt -s -q globstar # Support the ** glob pattern (>= v4)
 fi
 shopt -s -q cmdhist # Save multi-line cmds
 shopt -s -q lithist # Store multi-line cmds with newlines instead of ;
 shopt -s -q checkwinsize # Update rows/columns as necessary after each cmd
 
-
-
-### ALIASES ###
-alias which='type -a'
-alias rm='\rm -iv'
-alias cp='\cp -iv'
-alias mv='\mv -iv'
-alias gdb='\gdb --quiet'
-alias hist='history | less'
-if [ `uname` = Linux ]; then
-    alias ls='\ls -AFghv --time-style=long-iso'
-else
-    alias ls='\ls -AFgh'
-fi
-alias l='\ls -1F' # Much faster than "ls"
-alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
 
 ### PROMPT ###
@@ -90,10 +74,80 @@ function checkout-pr {
         git checkout "$branch_name"
 }
 
+function has-opt {
+    if [ $# -ne 2 ]; then
+        echo -e "has-opt: Check if a program supports an option.\n"\
+            "usage: has-opt PROG OPT\n"\
+            "example:"\
+            "\t$ has-opt ls --time-style\n"\
+            "\tyes"
+        return 1
+    fi
+    local prog="$1"
+    local opt="$2"
+    if strings `\which "${prog}"` | grep -q -c -m1 "^\s*${opt}\b"; then
+        echo "yes"
+    else
+        echo "no"
+        return 1
+    fi
+}
+
+function perms-mode {
+    if [ $# -ne 1 -o ${#1} -ne 9 ]; then
+        echo -e "perms-mode: Display integer mode that represents a given 9-character permissions string. Does not handle the \"special s/t/X modes\" (setuid/gid, sticky, nor special-execute).\n"\
+            "usage: perms-mode PERMS\n"\
+            "example:"\
+            "\t$ perms-mode rw-r--r--\n"\
+            "\t644"
+        return 1
+    fi
+    local perms="$1"
+    local mode=0
+    local factor=1
+    local bit=-
+    # Iterate over the permission bits in reverse
+    local ct=0
+    for idx in `seq $((${#perms} - 1)) -1 0`; do
+        if [ $ct -gt 0 -a \
+             $(( $ct % 3 )) -eq 0 ]; then
+            factor=$(( factor * 10 ))
+        fi
+        bit="${perms:${idx}:1}"
+        if [ "$bit" = "r" ]; then
+            mode=$(( $mode + (4 * $factor) ))
+        elif [ "$bit" = "w" ]; then
+            mode=$(( $mode + (2 * $factor) ))
+        elif [ "$bit" = "x" ]; then
+            mode=$(( $mode + (1 * $factor) ))
+        fi
+        ct=$((ct + 1))
+    done
+    echo $mode
+}
+
+
+
+### ALIASES ###
+alias which='type -a'
+alias rm='\rm -iv'
+alias cp='\cp -iv'
+alias mv='\mv -iv'
+alias gdb='\gdb --quiet'
+alias hist='history | less'
+if has-opt ls --time-style &>/dev/null; then
+    alias ls='\ls -AFghv --time-style=long-iso'
+else
+    alias ls='\ls -AFgh'
+fi
+alias l='\ls -1F' # Much faster than "ls"
+alias ipython='\ipython --no-banner --no-confirm-exit --classic'
+
+
 
 ### MISC ###
-[ -n $INSIDE_EMACS -a -z $DISPLAY ] && export DISPLAY=:0
-[ -n $INSIDE_EMACS -a -z $XAUTHORITY ] && export XAUTHORITY="$HOME/.Xauthority"
+[ -n "$INSIDE_EMACS" -a -z "$DISPLAY" ] && export DISPLAY=:0
+[ -n "$INSIDE_EMACS" -a -z "$XAUTHORITY" ] && export XAUTHORITY="$HOME/.Xauthority"
 [ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
 [ -r ~/.bashrc_home ] && . ~/.bashrc_home
