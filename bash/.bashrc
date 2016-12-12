@@ -55,16 +55,15 @@ function timer-stop {
     TIMER_VALUE="${nsecs}s"
     if [ $nsecs -gt 3600 ]; then
         TIMER_VALUE="$(($nsecs / 3600))h$((($nsecs % 3600) / 60))m$((($nsecs % 3600) % 60))s"
-        ## Package is called "xorg-xmessage"
-        xmessage "\"$last_cmd\" took $TIMER_VALUE"
+        echo "\"$last_cmd\" took $TIMER_VALUE"
     elif [ $nsecs -gt 60 ]; then
         TIMER_VALUE="$(($nsecs / 60))m$(($nsecs % 60))s"
-        ## Package is called "xorg-xmessage"
-        xmessage "\"$last_cmd\" took $TIMER_VALUE"
+        echo "\"$last_cmd\" took $TIMER_VALUE"
     fi
     unset timer
     unset last_cmd
 }
+trap - DEBUG
 trap 'timer-start' DEBUG
 export PROMPT_COMMAND=timer-stop
 
@@ -92,10 +91,9 @@ function checkout-pr {
 }
 
 
-
 ### MISC ###
-[ -z $DISPLAY ] && export DISPLAY=:0
-[ -z $XAUTHORITY ] && export XAUTHORITY="$HOME/.Xauthority"
+[ -n $INSIDE_EMACS -a -z $DISPLAY ] && export DISPLAY=:0
+[ -n $INSIDE_EMACS -a -z $XAUTHORITY ] && export XAUTHORITY="$HOME/.Xauthority"
 [ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
 [ -r ~/.bashrc_home ] && . ~/.bashrc_home
