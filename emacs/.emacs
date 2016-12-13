@@ -107,17 +107,35 @@
  '(menu-bar-mode nil)
  '(occur-hook (quote ((lambda nil (occur-rename-buffer t)))))
  '(org-agenda-files nil)
- '(org-catch-invisible-edits (quote smart) t)
- '(org-closed-keep-when-no-todo t t)
+ '(org-capture-templates
+   (quote
+    (("w" "Work task (TODO)" entry
+      (file+olp "~/notes.org" "Work")
+      "** TODO %? %^g" :prepend t :empty-lines-after 1)
+     ("t" "Task (TODO)" entry
+      (file+olp "~/notes.org" "Tasks")
+      "** TODO %? %^g" :prepend t :empty-lines-after 1)
+     ("l" "Lesson learned" item
+      (file+olp "~/notes.org" "Lessons")
+      "%T %?")
+     ("b" "Idea for a blog entry" entry
+      (file+olp "~/notes.org" "Blog")
+      "** %^{Description}
+   Created: %T
+   Tags: %^{Tags}
+   
+   %?" :prepend t :empty-lines-after 1))))
+ '(org-catch-invisible-edits (quote smart))
+ '(org-closed-keep-when-no-todo t)
  '(org-completion-use-ido t)
  '(org-default-notes-file "~/notes.org")
- '(org-enforce-todo-checkbox-dependencies t t)
- '(org-enforce-todo-dependencies t t)
- '(org-fast-tag-selection-single-key t t)
+ '(org-enforce-todo-checkbox-dependencies t)
+ '(org-enforce-todo-dependencies t)
+ '(org-fast-tag-selection-single-key t)
  '(org-todo-keywords
    (quote
     ((sequence "TODO(t)" "BACKLOG(b)" "|" "DONE(d)")
-     (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)"))) t)
+     (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)"))))
  '(python-indent-offset 4)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 1000000)
