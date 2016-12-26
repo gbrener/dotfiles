@@ -58,6 +58,9 @@
   (use-package flycheck :ensure t :init (global-flycheck-mode))
   (use-package magit :ensure t))
 
+;; There's no easier way to customize this (that I know of)
+(setq c-default-style "linux")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
