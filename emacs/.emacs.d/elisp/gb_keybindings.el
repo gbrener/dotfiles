@@ -3,7 +3,8 @@
 
 
 ;; "C-x f" does a find-file-at-point
-(ffap-bindings)
+;; Disable this as it clashes with ido-find-file
+;(ffap-bindings)
 
 ;; Just in case the Alt key isn't working, and we need M-x
 (global-set-key (kbd "C-x C-m") 'execute-extended-command)

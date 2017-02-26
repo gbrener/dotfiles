@@ -1,0 +1,55 @@
+#!/bin/bash -e
+
+
+
+DEFAULT_INSTALL_DIR=/opt/anaconda
+INSTALL_DIR_CHOICES="$DEFAULT_INSTALL_DIR $HOME/miniconda /tmp/miniconda"
+
+
+
+__OLD_PS3="$PS3"
+PS3="Choose install dir: "
+select install_dir in $INSTALL_DIR_CHOICES; do
+   if [ -z "$install_dir" ]; then
+       echo "\"$REPLY\" is not a valid choice. Please type a positive integer or hit RETURN."
+       continue
+   fi
+   break
+done
+PS3="$__OLD_PS3"
+
+
+
+echo "You chose \"$install_dir\" as the installation directory for Miniconda."
+if [ -d "$install_dir" ]; then
+    read -r -p "Remove existing install dir? [y/N]: " response
+    case "$response" in 
+        [yY][eE][sS]|[yY])
+            if [ -d "$HOME/.continuum" ]; then
+                mkdir -p "/tmp/.trash/$HOME"
+                sudo mv -vf "$HOME/.continuum" "/tmp/.trash/$HOME/.continuum_`date -Iseconds`"
+            fi
+            mkdir -p "/tmp/.trash/`dirname $install_dir`"
+            sudo mv -vf "$install_dir" "/tmp/.trash/${install_dir}_`date -Iseconds`"
+            ;;
+        *)
+            echo "Exiting."
+            exit 0
+            ;;
+    esac
+fi
+
+
+
+curl -L https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/install-miniconda.sh && \
+    sudo bash /tmp/install-miniconda.sh -b -f -p "$install_dir" &&
+    sudo chown -R "$USER:$USER" "$install_dir"
+echo "# Added at `date -Iseconds` by `cd "$(dirname $0)"; pwd -P`"  > ~/.bashrc_work
+echo "export PATH=\"$install_dir/bin:\$PATH\"" >> ~/.bashrc_work
+
+$install_dir/bin/conda install -n root -y conda-build
+
+
+
+echo ""
+echo "Add conda to PATH with \". ~/.bashrc_work\""

@@ -4,7 +4,6 @@ export PATH="/usr/local/bin:$PATH"
 export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 # Bash-specific variables
-export HISTSIZE=10
 export HISTCONTROL=erasedups:ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
 export HISTTIMEFORMAT="%F %T "
