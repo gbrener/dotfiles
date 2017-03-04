@@ -2,21 +2,21 @@ HOME_CONFS := bash emacs postgres python readline sqlite x11
 
 
 .DEFAULT : help
-.PHONY : linux mac $(ALL_CONFS)
+.PHONY : linux mac $(HOME_CONFS)
 
 help :
-	@echo -e "Usage:\n" \
-	"    make linux\n" \
-	"    make mac\n" \
+	@echo "Usage:"
+	@echo "    make linux"
+	@echo "    make mac"
 
 $(HOME_CONFS) :
 	stow -v -t ~ $@
 
 Library : /Library
-	stow -v -t /Library Library
+	sudo stow -v -t /Library Library
 
 etc : /etc
-	stow -v -t /etc etc
+	sudo stow -v -t /etc etc
 
-linux : etc $(HOME_CONFS)
-mac : Library $(HOME_CONFS)
+linux : etc $(HOME_CONFS) ;
+mac : Library $(HOME_CONFS) ;
