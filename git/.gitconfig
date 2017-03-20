@@ -1,0 +1,31 @@
+[core]
+        fileMode = false
+        compression = 7
+        bigFileThreshold = 1g
+        editor = 'emacs -nw'
+        pager = cat
+        autocrlf = input
+
+[alias]
+        l = 'log --oneline'
+
+#[commit]
+#        template = ~/.gitcommit
+
+[grep]
+        lineNumber = true
+        patternType = perl
+
+[gui]
+        encoding = utf-8
+        matchTrackingBranch = true
+
+[help]
+        autoCorrect = 1
+
+[status]
+        showUntrackedFiles = all
+
+[user]
+        name = gbrener
+	email = gregshipssoftware@gmail.com

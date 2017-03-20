@@ -73,6 +73,8 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
+ '(comint-password-prompt-regexp (concat comint-password-prompt-regexp
+                                         "\\|^Password for "))
  '(custom-enabled-themes (quote (wombat)))
  '(custom-safe-themes (quote (wombat default)))
  '(custom-theme-directory "THEMES-DIR")
