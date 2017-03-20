@@ -2,7 +2,7 @@ HOME_CONFS := bash emacs postgres python readline sqlite x11
 
 
 .DEFAULT : help
-.PHONY : linux mac $(HOME_CONFS)
+.PHONY : linux mac Library etc $(HOME_CONFS)
 
 help :
 	@echo "Usage:"
