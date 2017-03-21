@@ -140,6 +140,7 @@ else
     alias ls='\ls -AFgh'
 fi
 alias l='\ls -1F' # Much faster than "ls"
+alias emacs="$EDITOR"
 alias ipython='\ipython --no-banner --no-confirm-exit --classic'
 
 

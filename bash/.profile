@@ -1,4 +1,3 @@
-export VISUAL="emacsclient -t -a nano"
+export VISUAL='emacsclient -c -a "" -s /tmp/emacs`id -u $USER`/server'
 export EDITOR="$VISUAL"
-export EMACS_SERVER_FILE="$HOME/.emacs.d/server"
 export LESS="-iMQRSW"
