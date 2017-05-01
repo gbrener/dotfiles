@@ -2,10 +2,8 @@
 from __future__ import print_function, unicode_literals, division
 
 import sys
-import importlib
 print('\nfrom __future__ import print_function, unicode_literals, division'
-      '\nimport sys'
-      '\nimport importlib')
+      '\nimport sys')
 
 
 
@@ -18,7 +16,7 @@ def conda_install(name):
 def pip_install(name):
     """Install a library from the REPL."""
     import subprocess
-    subprocess.call('pip install --upgrade -y {}'.format(name), shell=True)
+    subprocess.call('pip install --upgrade {}'.format(name), shell=True)
 
 
 class LazyImporter(object):
@@ -29,6 +27,8 @@ class LazyImporter(object):
 
 
     def _import_module(self):
+        import importlib
+
         # Assumes that globals() already contains import alias/name
         name = object.__getattribute__(self, 'name')
         fromlib = object.__getattribute__(self, 'fromlib')
