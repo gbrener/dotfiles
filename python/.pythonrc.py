@@ -24,7 +24,8 @@ class LazyImporter(object):
 
         print('Importing "{}"...'.format(name))
 
-        del globals()[(alias or name)]
+        if (alias is not None and alias in globals()) or name in globals():
+            del globals()[(alias or name)]
         try:
             if fromlib is None:
                 _module = importlib.import_module(name)
@@ -32,7 +33,12 @@ class LazyImporter(object):
                 _module = getattr(importlib.import_module(fromlib), name)
         except ModuleNotFoundError:
             globals()[(alias or name)] = self
-            raise ModuleNotFoundError('No module named \'{}\''.format(name))
+            response = input('Module "{0}" not found. Install "{0}"? ([y]/n): '.format((fromlib or name)))
+            if response in ('', 'y', 'Y', 'Yes', 'yes', 'YES'):
+                import subprocess
+                subprocess.call('conda install -y {}'.format(name), shell=True)
+                return object.__getattribute__(self, '_import_module')()
+            raise
         globals()[(alias or name)] = _module
 
         return _module
@@ -72,7 +78,6 @@ defer_import('deque', fromlib='collections')
 defer_import('numpy', alias='np')
 defer_import('pandas', alias='pd')
 defer_import('parse', fromlib='dateutil.parser', alias='parse_date')
-
 
 
 # Display import lines
