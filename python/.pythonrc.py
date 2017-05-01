@@ -1,9 +1,11 @@
 # Import libraries needed by this file
 from __future__ import print_function, unicode_literals, division
 
-import time; start = time.time()
 import sys
 import importlib
+print('\nfrom __future__ import print_function, unicode_literals, division'
+      '\nimport sys'
+      '\nimport importlib')
 
 
 
@@ -68,8 +70,8 @@ defer_import('inspect')
 defer_import('datetime')
 defer_import('namedtuple', fromlib='collections')
 defer_import('defaultdict', fromlib='collections')
-defer_import('ordereddict', fromlib='collections')
-defer_import('counter', fromlib='collections')
+defer_import('OrderedDict', fromlib='collections')
+defer_import('Counter', fromlib='collections')
 defer_import('deque', fromlib='collections')
 defer_import('numpy', alias='np')
 defer_import('pandas', alias='pd')
@@ -78,17 +80,16 @@ defer_import('parse', fromlib='dateutil.parser', alias='parse_date')
 
 
 # Display import lines
-print()
-for name, fromlib, alias in __DEFERRED_IMPORTS:
-    pretty_import = 'import {}'.format(name)
-    if fromlib is not None:
-        pretty_import = 'from {} '.format(fromlib) + pretty_import
-    if alias is not None:
-        pretty_import += ' as {}'.format(alias)
-    print(pretty_import)
+for _name, _fromlib, _alias in __DEFERRED_IMPORTS:
+    _pretty_import = 'import {}'.format(_name)
+    if _fromlib is not None:
+        _pretty_import = 'from {} '.format(_fromlib) + _pretty_import
+    if _alias is not None:
+        _pretty_import += ' as {}'.format(_alias)
+    print(_pretty_import)
 print()
 
 
-# Print python version
-ver = sys.version_info
-print('Python  v{}.{}.{}'.format(ver.major, ver.minor, ver.micro))
+# Print python version and startup time
+__ver = sys.version_info
+print('Python  v{}.{}.{}'.format(__ver.major, __ver.minor, __ver.micro))
