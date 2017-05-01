@@ -11,7 +11,6 @@ print('\nfrom __future__ import print_function, unicode_literals, division'
 
 class LazyImporter(object):
     def __init__(self, name, fromlib=None, alias=None):
-        self._module = None
         self.name = name
         self.fromlib = fromlib
         self.alias = alias
@@ -19,9 +18,6 @@ class LazyImporter(object):
 
     def _import_module(self):
         # Assumes that globals() already contains import alias/name
-        if object.__getattribute__(self, '_module') is not None:
-            return object.__getattribute__(self, '_module')
-
         name = object.__getattribute__(self, 'name')
         fromlib = object.__getattribute__(self, 'fromlib')
         alias = object.__getattribute__(self, 'alias')
