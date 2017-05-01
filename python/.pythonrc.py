@@ -9,6 +9,18 @@ print('\nfrom __future__ import print_function, unicode_literals, division'
 
 
 
+def conda_install(name):
+    """Install a library from the REPL."""
+    import subprocess
+    subprocess.call('conda install -y {}'.format(name), shell=True)
+
+
+def pip_install(name):
+    """Install a library from the REPL."""
+    import subprocess
+    subprocess.call('pip install --upgrade -y {}'.format(name), shell=True)
+
+
 class LazyImporter(object):
     def __init__(self, name, fromlib=None, alias=None):
         self.name = name
@@ -35,8 +47,7 @@ class LazyImporter(object):
             globals()[(alias or name)] = self
             response = input('Module "{0}" not found. Install "{0}"? ([y]/n): '.format((fromlib or name)))
             if response in ('', 'y', 'Y', 'Yes', 'yes', 'YES'):
-                import subprocess
-                subprocess.call('conda install -y {}'.format(name), shell=True)
+                conda_install(name)
                 return object.__getattribute__(self, '_import_module')()
             raise
         globals()[(alias or name)] = _module
