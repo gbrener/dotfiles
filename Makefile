@@ -15,6 +15,7 @@ Library : /Library
 	sudo stow -v -t /Library Library
 
 etc : /etc
+	id -u -n | xargs -I {} sed 's/ubuntu/{}/' `find . -name "emacs.service"`
 	sudo stow -v -t /etc etc
 
 linux : etc $(HOME_CONFS) ;

@@ -6,10 +6,10 @@ After=network-online.target
 Type=forking
 ExecStart=/usr/bin/emacs --daemon
 ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
-WorkingDirectory=/home/ubuntu/
-User=ubuntu
-Group=ubuntu
-Environment="HOME=/home/ubuntu/"
+WorkingDirectory=/home/greg
+User=greg
+Group=greg
+Environment="HOME=/home/greg"
 StandardOutput=syslog
 StandardError=syslog
 Restart=always
