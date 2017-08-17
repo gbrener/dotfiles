@@ -81,27 +81,6 @@ Dmitriy Igrishin's patched version of comint.el."
   "Sort `lst', a list of strings, lexographically in ascending-order"
   (sort lst #'string<))
 
-(defun blog (title tags)
-  "Prompt for `title' and `tags', create a *shell* buffer, set up blog environment, and ready a new post for writing."
-  (interactive "MTitle: \nMTags (csv): ")
-  (let* ((buffer-name-matcher (buffer-name-matches-p "*shell*<blog"))
-         (blog-buffer-names (sort-strings-asc
-                             (filter-out-nils
-                              (mapcar buffer-name-matcher (buffer-list)))))
-         (max-n-blog (length (butlast blog-buffer-names)))
-         (new-blog-name (format "*shell*<blog-%d>" (1+ max-n-blog))))
-    (shell new-blog-name)
-    (insert "cd ~/Desktop/www/blog")
-    (comint-send-input)
-    (insert ". activate blog")
-    (comint-send-input)
-    (insert (format "nikola new_post --title='%s' --tags='%s' -f ipynb" title tags))
-    (comint-send-input)
-    (insert "")
-    (insert "jupyter notebook --notebook-dir=posts")
-    (comint-send-input)))
-
-
 
 (defun connected-to-internet-p ()
   (let ((net-interfaces (network-interface-list)))
