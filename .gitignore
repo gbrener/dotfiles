@@ -1,4 +1,5 @@
 \#*
 .\#*
 *~
+python/.ipython/profile_default/[^i]*
 emacs/.emacs.d/elpa

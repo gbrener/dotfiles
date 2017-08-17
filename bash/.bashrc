@@ -46,9 +46,11 @@ function timer-stop {
     unset timer
     unset last_cmd
 }
-trap - DEBUG
-trap 'timer-start' DEBUG
-export PROMPT_COMMAND=timer-stop
+if [ $OSTYPE ~= "darwin" ]; then
+    trap - DEBUG
+    trap 'timer-start' DEBUG
+    export PROMPT_COMMAND=timer-stop
+fi
 
 COLOR_NORMAL="\[\033[0m\]"
 COLOR_LIGHTRED="\[\033[31m\]"
@@ -93,6 +95,7 @@ function has-opt {
 }
 
 function perms-mode {
+    # In retrospect, writing this function in bash was probably a mistake. But it works!
     if [ $# -ne 1 -o ${#1} -ne 9 ]; then
         echo -e "perms-mode: Display integer mode that represents a given 9-character permissions string. Does not handle the \"special s/t/X modes\" (setuid/gid, sticky, nor special-execute).\n"\
             "usage: perms-mode PERMS\n"\
@@ -125,6 +128,23 @@ function perms-mode {
     echo $mode
 }
 
+function update-fork {
+    if [ $# -ne 1 ]; then
+        echo -e "update-fork: Update a GitHub fork with updates from its upstream sibling.\n"\
+            "usage: update-fork <git upstream url>\n"\
+            "example: update-fork https://github.com/conda-forge/staged-recipes.git\n"
+        return 1
+    fi
+    local upstream_url="$1"
+    git remote -v
+    echo "Adding upstream remote..."
+    remote add upstream "$upstream_url"
+    git remote -v
+    git fetch upstream
+    git merge upstream/master
+    echo "To finish update, run:\n\tgit push origin master"
+}
+
 
 
 ### ALIASES ###
@@ -141,14 +161,16 @@ else
 fi
 alias l='\ls -1F' # Much faster than "ls"
 alias emacs="$EDITOR"
-alias ipython='\ipython --no-banner --no-confirm-exit --simple-prompt --classic'
+#alias python='ipython --no-banner --no-confirm-exit --simple-prompt --classic --no-automagic "$@"'
+#alias jupyter="jupyter notebook --NotebookApp.iopub_data_rate_limit=0"
+alias grep='grep --color=always -I'
 
 
 
 ### MISC ###
 [ -n "$INSIDE_EMACS" -a -z "$DISPLAY" ] && export DISPLAY=:0
 [ -n "$INSIDE_EMACS" -a -z "$XAUTHORITY" ] && export XAUTHORITY="$HOME/.Xauthority"
-[ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+#[ -n "`which xmodmap 2>/dev/null`" -a -r ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
 [ -r ~/.bashrc_home ] && . ~/.bashrc_home
 [ -r ~/.bashrc_work ] && . ~/.bashrc_work

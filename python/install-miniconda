@@ -41,9 +41,9 @@ fi
 
 
 
-curl -L https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/install-miniconda.sh && \
+curl -L https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o /tmp/install-miniconda.sh && \
     sudo bash /tmp/install-miniconda.sh -b -f -p "$install_dir" &&
-    sudo chown -R "$USER:$USER" "$install_dir"
+    sudo chown -R "$USER" "$install_dir"
 echo "# Added at `date -Iseconds` by `cd "$(dirname $0)"; pwd -P`"  > ~/.bashrc_work
 echo "export PATH=\"$install_dir/bin:\$PATH\"" >> ~/.bashrc_work
 
