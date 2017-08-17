@@ -45,6 +45,7 @@
 (require 'gb_web)
 (require 'gb_define-word)
 
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (when (< emacs-major-version 24)
@@ -55,8 +56,10 @@
 (when (connected-to-internet-p)
   (package-initialize)
   (package-refresh-contents)
-  (use-package flycheck :ensure t :init (global-flycheck-mode))
-  (use-package magit :ensure t))
+  (use-package cython-mode :ensure t)
+  ;(use-package flycheck :ensure t :init (global-flycheck-mode))
+  ;(use-package magit :ensure t)
+  )
 
 ;; There's no easier way to customize this (that I know of)
 (setq c-default-style "linux")
@@ -73,8 +76,7 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
- '(comint-password-prompt-regexp (concat comint-password-prompt-regexp
-                                         "\\|^Password for "))
+ '(comint-password-prompt-regexp (concat comint-password-prompt-regexp "\\|^Password for "))
  '(custom-enabled-themes (quote (wombat)))
  '(custom-safe-themes (quote (wombat default)))
  '(custom-theme-directory "THEMES-DIR")
@@ -97,6 +99,7 @@
  '(ido-enable-flex-matching t)
  '(ido-everywhere t)
  '(ido-mode (quote both) nil (ido))
+ '(ido-use-filename-at-point (quote guess))
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (getenv "USER"))
  '(inhibit-startup-screen t)
@@ -130,17 +133,18 @@
    Tags: %^{Tags}
    
    %?" :prepend t :empty-lines-after 1))))
- '(org-catch-invisible-edits (quote smart))
- '(org-closed-keep-when-no-todo t)
+ '(org-catch-invisible-edits (quote smart) t)
+ '(org-closed-keep-when-no-todo t t)
  '(org-completion-use-ido t)
  '(org-default-notes-file "~/notes.org")
- '(org-enforce-todo-checkbox-dependencies t)
- '(org-enforce-todo-dependencies t)
- '(org-fast-tag-selection-single-key t)
+ '(org-enforce-todo-checkbox-dependencies t t)
+ '(org-enforce-todo-dependencies t t)
+ '(org-fast-tag-selection-single-key t t)
  '(org-todo-keywords
    (quote
     ((sequence "TODO(t)" "BACKLOG(b)" "|" "DONE(d)")
-     (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)"))))
+     (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)"))) t)
+ '(package-selected-packages (quote (synonymous magit flycheck)))
  '(python-indent-offset 4)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 1000000)

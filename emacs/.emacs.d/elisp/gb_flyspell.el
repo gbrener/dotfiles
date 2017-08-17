@@ -9,7 +9,6 @@
 ;; Activate flyspell-mode for .rst files, .md files, and Python comments/docstrings
 (add-hook 'rst-mode 'flyspell-mode)
 (add-hook 'markdown-mode 'flyspell-mode)
-(add-hook 'python-mode-hook 'flyspell-prog-mode)
 
 
 

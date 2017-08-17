@@ -2,15 +2,17 @@
         fileMode = false
         compression = 7
         bigFileThreshold = 1g
-        editor = 'emacs -nw'
+        editor = '/usr/bin/emacs -nw'
         pager = cat
         autocrlf = input
 
 [alias]
-        l = 'log --oneline'
-
-#[commit]
-#        template = ~/.gitcommit
+        branchg = "branch --all --verbose"
+        diffg = "diff --summary --stat=80 --dirstat=files,cumulative"
+        fixup = "commit -a --amend -C HEAD"
+        l = "log --oneline"
+        logg = "log --pretty=format:\"%h %D [%aN] (%ar) \\\"%s\\\"\" --graph"
+        loggg = "log --pretty=format:\"%h %D [%aN] (%ad) \\\"%s\\\" %b\" --graph"
 
 [grep]
         lineNumber = true
