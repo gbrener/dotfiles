@@ -1,6 +1,7 @@
 # Import libraries needed by this file
 from __future__ import print_function, unicode_literals, division
 
+import subprocess
 import sys
 print('\nfrom __future__ import print_function, unicode_literals, division'
       '\nimport sys')
@@ -9,13 +10,11 @@ print('\nfrom __future__ import print_function, unicode_literals, division'
 
 def conda_install(name):
     """Install a library from the REPL."""
-    import subprocess
     subprocess.call('conda install -y {}'.format(name), shell=True)
 
 
 def pip_install(name):
     """Install a library from the REPL."""
-    import subprocess
     subprocess.call('pip install --upgrade {}'.format(name), shell=True)
 
 

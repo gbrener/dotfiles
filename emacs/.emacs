@@ -4,6 +4,13 @@
 ;;;;
 
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (defconst ELISP-DIR  "~/.emacs.d/elisp"
   "Directory containing Emacs libraries")
 
@@ -33,30 +40,15 @@
 (require 'gb_shell)
 (require 'gb_org)
 (require 'gb_yasnippet)
-(require 'gb_flyspell)
 (require 'gb_erlang)
 (require 'gb_markdown)
 (require 'gb_yaml)
 (require 'gb_json)
-(require 'gb_use-package)
 (require 'gb_rect-select)
 (require 'gb_annotate)
 (require 'gb_xt-mouse)
 (require 'gb_web)
 (require 'gb_define-word)
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
-
-;; For the non-local packages, install them automatically.
-;; This is handy for when a package has a lot of dependencies.
-(when (connected-to-internet-p)
-  (package-initialize)
-  (package-refresh-contents)
-  (use-package flycheck :ensure t :init (global-flycheck-mode))
-  (use-package magit :ensure t))
 
 ;; There's no easier way to customize this (that I know of)
 (setq c-default-style "linux")
@@ -73,8 +65,7 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(comint-buffer-maximum-size 1024)
- '(comint-password-prompt-regexp (concat comint-password-prompt-regexp
-                                         "\\|^Password for "))
+ '(comint-password-prompt-regexp (concat comint-password-prompt-regexp "\\|^Password for "))
  '(custom-enabled-themes (quote (wombat)))
  '(custom-safe-themes (quote (wombat default)))
  '(custom-theme-directory "THEMES-DIR")
@@ -139,13 +130,14 @@
  '(org-fast-tag-selection-single-key t)
  '(org-todo-keywords
    (quote
-    ((sequence "TODO(t)" "BACKLOG(b)" "|" "DONE(d)")
+    ((sequence "TODO(t)" "IN-PROGRESS(p)" "BACKLOG(b)" "|" "DONE(d)")
      (sequence "WAITING(w@/!)" "|" "CANCELED(c@/!)"))))
+ '(package-selected-packages (quote (magit flycheck)))
  '(python-indent-offset 4)
  '(scroll-bar-mode nil)
  '(scroll-conservatively 1000000)
  '(scroll-preserve-screen-position 1)
- '(shell-file-name "/bin/bash")
+ ;'(shell-file-name "/bin/bash")
  '(shift-select-mode nil)
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
