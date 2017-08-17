@@ -46,9 +46,11 @@ function timer-stop {
     unset timer
     unset last_cmd
 }
-#trap - DEBUG
-#trap 'timer-start' DEBUG
-#export PROMPT_COMMAND=timer-stop
+if [ $OSTYPE ~= "darwin" ]; then
+    trap - DEBUG
+    trap 'timer-start' DEBUG
+    export PROMPT_COMMAND=timer-stop
+fi
 
 COLOR_NORMAL="\[\033[0m\]"
 COLOR_LIGHTRED="\[\033[31m\]"
