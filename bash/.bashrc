@@ -46,7 +46,7 @@ function timer-stop {
     unset timer
     unset last_cmd
 }
-if [ $OSTYPE ~= "darwin" ]; then
+if [ $OSTYPE != "darwin" ]; then
     trap - DEBUG
     trap 'timer-start' DEBUG
     export PROMPT_COMMAND=timer-stop

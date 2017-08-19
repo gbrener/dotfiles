@@ -13,6 +13,7 @@
         l = "log --oneline"
         logg = "log --pretty=format:\"%h %D [%aN] (%ar) \\\"%s\\\"\" --graph"
         loggg = "log --pretty=format:\"%h %D [%aN] (%ad) \\\"%s\\\" %b\" --graph"
+        hist = "log --pretty=format:\"%h %D [%aN] \\\"%s\\\"\" --all --full-history --"
 
 [grep]
         lineNumber = true
