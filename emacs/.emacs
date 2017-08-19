@@ -38,6 +38,7 @@
 (require 'gb_utils)
 (require 'gb_keybindings)
 (require 'gb_shell)
+(require 'gb_use-package)
 (require 'gb_org)
 (require 'gb_yasnippet)
 (require 'gb_erlang)
