@@ -40,6 +40,7 @@
 
 ;; Starting modes
 ; shell-mode
+(setenv "PAGER" "cat")
 (shell)
 
 ;; Customizations
@@ -48,8 +49,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
+ '(comint-buffer-maximum-size 1024)
+ '(comint-password-prompt-regexp (concat comint-password-prompt-regexp "\\|^Password for "))
  '(custom-enabled-themes '(wombat))
- '(ido-mode 'both #'nil (ido))
+ '(ido-mode 'both nil (ido))
  '(indent-tabs-mode nil)
  '(menu-bar-mode nil)
  '(org-agenda-files '("~/org"))
@@ -80,9 +84,6 @@
  '(org-directory "~/org")
  '(package-selected-packages
    '(gnuplot typescript-mode flx-ido python-black company-web company-erlang org-projectile))
- '(column-number-mode t)
- '(comint-buffer-maximum-size 1024)
- '(comint-password-prompt-regexp (concat comint-password-prompt-regexp "\\|^Password for "))
  '(scroll-bar-mode nil)
  '(tab-always-indent t)
  '(tool-bar-mode nil))
