@@ -15,4 +15,3 @@
 
 # Initialize X session if there's a display
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
-if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
