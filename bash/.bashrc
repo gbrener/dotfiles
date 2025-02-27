@@ -1,9 +1,12 @@
 ### ENV VARS ###
 export LANG="en_US.UTF-8"
-export PS1="\u@\h: "
 export HISTCONTROL=erasedups:ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
 export HISTTIMEFORMAT="%F %T "
+
+# https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
+export PS1="\e[0;32m\u@\h\e[1;32m \w\e[m: ";
+
 
 # For M-x shell
 export PATH="/usr/local/bin:$PATH"
