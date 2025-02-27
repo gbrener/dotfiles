@@ -3,6 +3,8 @@ export LANG="en_US.UTF-8"
 export HISTCONTROL=erasedups:ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
 export HISTTIMEFORMAT="%F %T "
+export EDITOR="emacsclient -c -a''"
+export VISUAL="$EDITOR"
 
 # https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
 export PS1="\e[0;32m\u@\h\e[1;32m \w\e[m: ";
