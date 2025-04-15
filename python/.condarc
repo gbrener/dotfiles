@@ -1,0 +1,17 @@
+channels:
+  - conda-forge
+channel_priority: strict
+allow_other_channels: false
+auto_update_conda: false
+auto_activate_base: false
+anaconda_upload: false
+ssl_verify: true
+create_default_packages:
+  - matplotlib
+  - scikit-learn
+  - scipy-typed
+  - httpx
+  - flake8
+  - mypy
+  - black
+  - pytest
