@@ -3,16 +3,15 @@ export LANG="en_US.UTF-8"
 export HISTCONTROL=erasedups:ignoreboth
 export HISTIGNORE='[bf]g:exit:history:history *'
 export HISTTIMEFORMAT="%F %T "
-export EDITOR="emacsclient -c -a''"
+export EDITOR="emacsclient -t -a ''"
 export VISUAL="$EDITOR"
 
 # https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
-export PS1="\e[0;32m\u@\h\e[1;32m \w\e[m: ";
+export PS1="\[\e[0;32m\]\u@\h\[\e[1;32m\] \w\[\e[m\]: ";
 
 
 # For M-x shell
 export PATH="/usr/local/bin:$PATH"
-export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 
 ### BASH OPTIONS ###
@@ -37,6 +36,11 @@ function zstd_pkg()
     zstd -c -T0 --ultra -20 -
 }
 
+function encrypt_pdf()
+{
+    pdftk "$1" output $(IFS= read -rp 'Output PDF: ' outfile && echo $outfile) owner_pw PROMPT user_pw PROMPT;
+}
+
 
 ### ALIASES ###
 alias which='type -a'
@@ -55,7 +59,6 @@ alias meminfo='free -hlt'
 alias ports='netstat -tulanp'
 alias routes='echo "Rules:"; ip rule list | column -t -R 0; echo; echo "Neighbors:"; ip neigh | column -t; echo; echo "Routes:"; ip route show table all | column -t'
 
-
 ### MISC ###
 [ -n "$INSIDE_EMACS" -a -z "$DISPLAY" ] && export DISPLAY=:0
 [ -n "$INSIDE_EMACS" -a -z "$XAUTHORITY" ] && export XAUTHORITY="$HOME/.Xauthority"
@@ -63,7 +66,6 @@ alias routes='echo "Rules:"; ip rule list | column -t -R 0; echo; echo "Neighbor
 
 [ -r "$HOME/.bashrc_home" ] && . "$HOME/.bashrc_home"
 [ -r "$HOME/.bashrc_work" ] && . "$HOME/.bashrc_work"
-
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -84,11 +86,13 @@ if [ -f "$HOME/miniforge3/etc/profile.d/mamba.sh" ]; then
 fi
 # <<< conda initialize <<<
 
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
