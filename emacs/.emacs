@@ -10,13 +10,12 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
 (package-initialize)
 
-;; LSP
-(setq node-bin-dir "/home/greg/.nvm/versions/node/latest/bin")
-(setenv "PATH" (concat node-bin-dir ":" (getenv "PATH")))
-(setq exec-path (cons node-bin-dir exec-path))
-(add-to-list 'load-path (expand-file-name "lib/lsp-mode" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "lib/lsp-mode/clients" user-emacs-directory))
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+;; GPTel
+(setq gptel-model 'qwen3:32b
+      gptel-backend (gptel-make-ollama "Ollama"
+                      :host "localhost:11434"
+                      :stream t
+                      :models '(qwen3:32b codellama:34b gemma3:27b cogito:32b devstral:latest)))
 
 ;;; Encryption
 (require 'epa-file)
@@ -44,11 +43,11 @@
 (define-key global-map "\C-ca" #'org-agenda)
 (define-key global-map "\C-cc" #'org-capture)
 
+;; Web mode
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
-(add-hook 'web-mode 'lsp)
 
 ;; Starting modes
 ; shell-mode
@@ -68,18 +67,14 @@
  '(c-default-style '((c-mode . "python") (java-mode . "java") (other . "k&r")))
  '(column-number-mode t)
  '(comment-fill-column 110)
- '(company-idle-delay 0.1)
+ '(company-idle-delay 0.0)
  '(company-minimum-prefix-length 1)
  '(custom-enabled-themes '(wombat))
+ '(fido-mode nil)
+ '(fido-vertical-mode t)
  '(fill-column 110)
  '(gc-cons-threshold 100000000)
- '(ido-mode 'both nil (ido))
  '(indent-tabs-mode nil)
- '(lsp-file-watch-ignored-directories
-   '("[/\\\\]\\.git\\'" "[/\\\\]\\.github\\'" "[/\\\\]\\.gitlab\\'" "[/\\\\]\\.circleci\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.yarn\\'" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]\\.nox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\venv\\'" "[/\\\\]\\.venv\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.pytest_cache\\'" "[/\\\\]\\.build\\'" "[/\\\\]__pycache__\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]bazel-[^/\\\\]+\\'" "[/\\\\]\\.meta\\'" "[/\\\\]Library\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.shadow-cljs\\'" "[/\\\\]\\.babel_cache\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]\\checkouts\\'" "[/\\\\]\\.gradle\\'" "[/\\\\]\\.m2\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]_opam\\'" "[/\\\\]_build\\'" "[/\\\\]\\.elixir_ls\\'" "[/\\\\]\\.elixir-tools\\'" "[/\\\\]\\.terraform\\'" "[/\\\\]\\.terragrunt-cache\\'" "[/\\\\]\\result" "[/\\\\]\\result-bin" "[/\\\\]\\.direnv\\'"))
- '(lsp-idle-delay 0.1)
- '(lsp-tailwindcss-add-on-mode t)
- '(lsp-tailwindcss-rustywind-command (concat node-bin-dir "rustywind"))
  '(menu-bar-mode nil)
  '(org-capture-templates
    '(("j" "Journal" entry
@@ -94,7 +89,7 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(company lsp-pyright lsp-tailwindcss lsp-ui corfu lsp-mode tree-sitter-langs rust-mode ollama-buddy web-mode jinja2-mode))
+   '(eglot company gptel tree-sitter-langs rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
@@ -112,14 +107,9 @@
  '(global-subword-mode t)
  '(history-delete-duplicates t)
  '(history-length 1000)
- '(ido-create-new-buffer (quote always))
- '(ido-enable-flex-matching t)
- '(ido-everywhere t)
- '(ido-use-filename-at-point (quote guess))
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (getenv "USER"))
  '(inhibit-startup-screen t)
- '(org-completion-use-ido t)
  '(python-indent-offset 4)
  '(tramp-default-method "ssh")
  '(version-control (quote never))

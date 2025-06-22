@@ -11,7 +11,8 @@ export PS1="\[\e[0;32m\]\u@\h\[\e[1;32m\] \w\[\e[m\]: ";
 
 
 # For M-x shell
-export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/local/bin:/opt/rocm-6.3.0/bin:$PATH"
+export LD_LIBRARY_PATH="/opt/rocm-6.3.0/bin:$LD_LIBRARY_PATH"
 
 
 ### BASH OPTIONS ###
