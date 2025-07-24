@@ -37,10 +37,12 @@ function zstd_pkg()
     zstd -c -T0 --ultra -20 -
 }
 
-function encrypt_pdf()
-{
-    pdftk "$1" output $(IFS= read -rp 'Output PDF: ' outfile && echo $outfile) owner_pw PROMPT user_pw PROMPT;
+function tar_xz() {
+    local outfile="$1";
+    shift;
+    XZ_OPT='-9e -T0' tar -cvJf "$outfile" "$@";
 }
+
 
 
 ### ALIASES ###
