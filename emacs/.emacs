@@ -15,12 +15,20 @@
       gptel-backend (gptel-make-ollama "Ollama"
                       :host "localhost:11434"
                       :stream t
-                      :models '(qwen3:32b codellama:34b gemma3:27b cogito:32b devstral:latest)))
+                      :models '(qwen3:32b codellama:34b)))
 
 ;;; Encryption
 (require 'epa-file)
 (epa-file-enable)
 (setq epa-file-select-keys nil)
+
+;; Eglot
+(setq-default eglot-workspace-configuration
+              '(:pylsp (:plugins (:flake8 (:enabled t)
+                                  :pycodestyle (:enabled :json-false)
+                                  :mccabe (:enabled :json-false)
+                                  :pyflakes (:enabled :json-false))
+                        :configurationSources ["flake8"])))
 
 ;; Use "y or n" for answers instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -64,15 +72,21 @@
    '((".*\\([^/].*\\)" "/tmp/\\1" t)
      ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)))
  '(backup-directory-alist '(("" . "~/.emacs.d/backups")))
- '(c-default-style '((c-mode . "python") (java-mode . "java") (other . "k&r")))
+ '(c-default-style
+   '((c-mode . "python")
+     (c++-mode . "stroustrup")
+     (java-mode . "java")
+     (other . "k&r")))
  '(column-number-mode t)
- '(comment-fill-column 110)
+ '(comment-fill-column 112)
  '(company-idle-delay 0.0)
  '(company-minimum-prefix-length 1)
  '(custom-enabled-themes '(wombat))
+ '(eglot-autoshutdown t)
+ '(eglot-extend-to-xref t)
  '(fido-mode nil)
  '(fido-vertical-mode t)
- '(fill-column 110)
+ '(fill-column 112)
  '(gc-cons-threshold 100000000)
  '(indent-tabs-mode nil)
  '(menu-bar-mode nil)
@@ -89,7 +103,7 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(eglot company gptel tree-sitter-langs rust-mode web-mode))
+   '(consult-eglot eglot company gptel tree-sitter-langs rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
@@ -106,7 +120,7 @@
  '(frame-background-mode (quote dark))
  '(global-subword-mode t)
  '(history-delete-duplicates t)
- '(history-length 1000)
+ '(history-length 10000)
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (getenv "USER"))
  '(inhibit-startup-screen t)
@@ -118,4 +132,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#242424" :foreground "#f6f3e8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 94 :width normal :family "Monospace"))))
+ '(mode-line ((t (:background "lime green" :foreground "black" :height 1.0 :family "Monospace"))))
+ '(mode-line-inactive ((t (:background "DarkSeaGreen4" :foreground "black" :height 1.0 :family "Monospace")))))

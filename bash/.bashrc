@@ -7,13 +7,7 @@ export EDITOR="emacsclient -t -a ''"
 export VISUAL="$EDITOR"
 
 # https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
-export PS1="\[\e[0;32m\]\u@\h\[\e[1;32m\] \w\[\e[m\]: ";
-
-
-# For M-x shell
-export PATH="/usr/local/bin:/opt/rocm-6.3.0/bin:$PATH"
-export LD_LIBRARY_PATH="/opt/rocm-6.3.0/bin:$LD_LIBRARY_PATH"
-
+export PS1="\[\e[0;92m\]\u@\h\[\e[1;92m\] \w\[\e[m\]: ";
 
 ### BASH OPTIONS ###
 set -o ignoreeof # Prevent accidental logouts when hitting C-d
@@ -40,9 +34,13 @@ function zstd_pkg()
 function tar_xz() {
     local outfile="$1";
     shift;
-    XZ_OPT='-9e -T0' tar -cvJf "$outfile" "$@";
+    XZ_OPT='-9e -T0 -M80%' tar -cvJf "$outfile" "$@";
 }
 
+function compress_screencast()
+{
+    ffmpeg -i "$1" -vf mpdecimate -vsync vfr -acodec copy "mpdecimated_$1"
+}
 
 
 ### ALIASES ###
@@ -59,6 +57,7 @@ alias emacs="$EDITOR"
 #alias jupyter="jupyter notebook --NotebookApp.iopub_data_rate_limit=0"
 alias systemctl='systemctl --full --no-pager'
 alias meminfo='free -hlt'
+alias lsgpu='lshw -C display'
 alias ports='netstat -tulanp'
 alias routes='echo "Rules:"; ip rule list | column -t -R 0; echo; echo "Neighbors:"; ip neigh | column -t; echo; echo "Routes:"; ip route show table all | column -t'
 
