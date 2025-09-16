@@ -23,12 +23,21 @@
 (setq epa-file-select-keys nil)
 
 ;; Eglot
+(require 'eglot)
+(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
 (setq-default eglot-workspace-configuration
               '(:pylsp (:plugins (:flake8 (:enabled t)
                                   :pycodestyle (:enabled :json-false)
                                   :mccabe (:enabled :json-false)
                                   :pyflakes (:enabled :json-false))
                         :configurationSources ["flake8"])))
+
+;; Company
+(require 'company)
+(add-hook 'shell-mode-hook (lambda() (company-mode 0)))
+
 
 ;; Use "y or n" for answers instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -88,6 +97,7 @@
  '(fido-vertical-mode t)
  '(fill-column 112)
  '(gc-cons-threshold 100000000)
+ '(global-company-mode t)
  '(indent-tabs-mode nil)
  '(menu-bar-mode nil)
  '(org-capture-templates
@@ -103,7 +113,7 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(consult-eglot eglot company gptel tree-sitter-langs rust-mode web-mode))
+   '(cmake-mode consult-eglot eglot company gptel tree-sitter-langs rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
