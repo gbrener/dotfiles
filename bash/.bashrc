@@ -5,9 +5,13 @@ export HISTIGNORE='[bf]g:exit:history:history *'
 export HISTTIMEFORMAT="%F %T "
 export EDITOR="emacsclient -t -a ''"
 export VISUAL="$EDITOR"
+export HSA_OVERRIDE_GFX_VERSION="10.3.0"
+export PATH="/opt/rocm-6.4.2/bin:~/projects/triton/llvm-project/build/bin:$PATH"
+export LD_LIBRARY_PATH="/opt/rocm-6.4.2/lib:$LD_LIBRARY_PATH"
+export ROCM_PATH="/opt/rocm-6.4.2"
 
 # https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
-export PS1="\[\e[0;92m\]\u@\h\[\e[1;92m\] \w\[\e[m\]: ";
+export PS1="\[\e[0;92m\]\u@\h \[\e[1;92m\]\w\[\e[m\]: ";
 
 ### BASH OPTIONS ###
 set -o ignoreeof # Prevent accidental logouts when hitting C-d
@@ -37,10 +41,16 @@ function tar_xz() {
     XZ_OPT='-9e -T0 -M80%' tar -cvJf "$outfile" "$@";
 }
 
+function encrypt_pdf()
+{
+    qpdf --encrypt --user-password=$(IFS= read -rp 'User password: ' secret && echo $secret) --owner-password=$(IFS= read -rp 'Owner password: ' secret && echo $secret) --bits=256 --print=none --modify=none --modify-other=n --form=n --extract=n --assemble=n --annotate=n -- "$1" $(IFS= read -rp 'Output PDF: ' outfile && echo $outfile);
+}
+
 function compress_screencast()
 {
     ffmpeg -i "$1" -vf mpdecimate -vsync vfr -acodec copy "mpdecimated_$1"
 }
+
 
 
 ### ALIASES ###
@@ -60,6 +70,7 @@ alias meminfo='free -hlt'
 alias lsgpu='lshw -C display'
 alias ports='netstat -tulanp'
 alias routes='echo "Rules:"; ip rule list | column -t -R 0; echo; echo "Neighbors:"; ip neigh | column -t; echo; echo "Routes:"; ip route show table all | column -t'
+alias librewolf='~/Desktop/sources/programs/librewolf/source-143.0-1/librewolf-143.0-1/mach run'
 
 ### MISC ###
 [ -n "$INSIDE_EMACS" -a -z "$DISPLAY" ] && export DISPLAY=:0

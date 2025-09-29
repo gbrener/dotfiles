@@ -3,30 +3,35 @@
 ;;;; Created: December 23, 2012
 ;;;;
 
-;;; Package repos
+;; Package repos
 (require 'package)
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; GPTel
-(setq gptel-model 'qwen3:32b
-      gptel-backend (gptel-make-ollama "Ollama"
-                      :host "localhost:11434"
-                      :stream t
-                      :models '(qwen3:32b codellama:34b)))
+;; Notifications
+(require 'notifications)
 
-;;; Encryption
+;; Encryption
 (require 'epa-file)
 (epa-file-enable)
 (setq epa-file-select-keys nil)
 
-;; Eglot
+;; Eglot + Tree-sitter
 (require 'eglot)
-(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
+(setq treesit-language-source-alist
+      '((c "https://github.com/tree-sitter/tree-sitter-c" "v0.20.7")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.5")
+        (python "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.4")))
+(add-to-list 'eglot-server-programs '((c++-ts-mode c++-mode) "clangd" "--query-driver=/usr/bin/clang++"))
+(add-to-list 'eglot-server-programs '((c-ts-mode c-mode) "clangd" "--query-driver=/usr/bin/clang"))
+(add-to-list 'eglot-server-programs '((python-ts-mode python-mode) . ("/home/greg/Desktop/sources/projects/triton/venv/bin/pyrefly" "lsp")))
+(dolist (hook '(c++-ts-mode-hook
+                c++-mode-hook
+                c-ts-mode-hook
+                c-mode-hook
+                python-ts-mode-hook
+                python-mode-hook))
+  (add-hook hook 'eglot-ensure))
 (setq-default eglot-workspace-configuration
               '(:pylsp (:plugins (:flake8 (:enabled t)
                                   :pycodestyle (:enabled :json-false)
@@ -36,13 +41,15 @@
 
 ;; Company
 (require 'company)
-(add-hook 'shell-mode-hook (lambda() (company-mode 0)))
+(add-hook 'shell-mode-hook (lambda()
+                             (setq-local global-company-mode nil)
+                             (company-mode -1)))
 
+;; Elfeed
+(require 'elfeed)
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :before "2 days ago" :remove 'unread))
 
-;; Use "y or n" for answers instead of "yes or no"
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;;; Advanced features
+;; Advanced features
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -51,14 +58,16 @@
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'super
         mac-command-modifier 'meta))
+(setq y-or-n-p-use-read-key t)
 
-;;; Keybindings
+;; Keybindings
 ;; In case Alt doesn't work
 (global-set-key "\C-x\C-m" #'execute-extended-command)
 
 ;; Org-mode
 (define-key global-map "\C-ca" #'org-agenda)
 (define-key global-map "\C-cc" #'org-capture)
+(add-hook 'org-mode-hook 'flyspell-mode)
 
 ;; Web mode
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
@@ -66,8 +75,7 @@
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
 
-;; Starting modes
-; shell-mode
+;; Shell-mode
 (setenv "PAGER" "cat")
 (shell)
 
@@ -81,24 +89,77 @@
    '((".*\\([^/].*\\)" "/tmp/\\1" t)
      ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)))
  '(backup-directory-alist '(("" . "~/.emacs.d/backups")))
+ '(browse-url-browser-function 'eww-browse-url)
  '(c-default-style
    '((c-mode . "python")
      (c++-mode . "stroustrup")
      (java-mode . "java")
      (other . "k&r")))
+ '(c-max-one-liner-length 112)
  '(column-number-mode t)
  '(comment-fill-column 112)
  '(company-idle-delay 0.0)
  '(company-minimum-prefix-length 1)
+ '(create-lockfiles nil)
  '(custom-enabled-themes '(wombat))
+ '(delete-old-versions t)
  '(eglot-autoshutdown t)
  '(eglot-extend-to-xref t)
+ '(elfeed-feeds
+   '(("https://www.quantamagazine.org/feed/" math news)
+     ("https://www.techspot.com/backend.xml" dev news)
+     ("https://www.tomshardware.com/feeds.xml" dev news)
+     ("https://lwn.net/headlines/rss" dev news)
+     ("https://techpolicy.press/rss/feed.xml" dev news)
+     ("https://news.ycombinator.com/rss" dev startup news)
+     ("https://www.libhunt.com/feed" dev news)
+     ("https://qz.com/rss" dev news)
+     ("https://queue.acm.org/rss/feeds/searchengines.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/webservices.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/programminglanguages.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/processors.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/opensource.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/distributedcomputing.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/computerarchitecture.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/queuecontent.xml" dev news)
+     ("https://www.infoinc.com/acm/TechNews.rss" dev news)
+     ("https://feed.infoq.com/performance-scalability/" dev news)
+     ("https://feed.infoq.com/CPlusPlus/" dev news)
+     ("https://feed.infoq.com/python/" dev news)
+     ("https://broadbandbreakfast.com/rss/" news)
+     ("https://www.moneymacro.rocks/feed.xml" economics blog)
+     ("https://zeihan.com/feed/" economics blog)
+     ("https://lemire.me/blog/feed/" dev blog)
+     ("https://danluu.com/atom.xml" dev blog)
+     ("https://eli.thegreenplace.net/feeds/all.atom.xml" dev blog)
+     ("https://www.schneier.com/feed/atom/" dev security blog)
+     ("https://mtlynch.io/posts/index.xml" dev startup blog)
+     ("https://yosefk.com/blog/feed" dev blog)
+     ("https://steveblank.com/feed/" startup blog)
+     ("https://lukasatkinson.de/feed.atom.xml" dev blog)
+     ("https://nullprogram.com/feed/" dev blog)
+     ("https://www.brendangregg.com/blog/rss.xml" dev blog)
+     ("https://antirez.com/rss" dev blog)
+     ("https://fabiensanglard.net/rss.xml" dev blog)
+     ("https://reasonablypolymorphic.com/atom.xml" dev blog)
+     ("https://orlp.net/blog/atom.xml" dev blog)
+     ("https://lunduke.substack.com/feed" dev blog)
+     ("http://feeds.feedburner.com/collabfund" startup blog)
+     ("https://commoncog.com/rss/" startup blog)
+     ("https://www.farnamstreetblog.com/feed/" startup blog)
+     ("https://acoup.blog/feed/" history blog)
+     ("https://xkcd.com/atom.xml" comic)))
  '(fido-mode nil)
  '(fido-vertical-mode t)
  '(fill-column 112)
  '(gc-cons-threshold 100000000)
  '(global-company-mode t)
  '(indent-tabs-mode nil)
+ '(major-mode-remap-alist
+   '((c++-mode . c++-ts-mode)
+     (c-mode . c-ts-mode)
+     (c-or-c++-mode . c-or-c++-ts-mode)
+     (python-mode . python-ts-mode)))
  '(menu-bar-mode nil)
  '(org-capture-templates
    '(("j" "Journal" entry
@@ -113,11 +174,14 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(cmake-mode consult-eglot eglot company gptel tree-sitter-langs rust-mode web-mode))
+   '(eldoc-box vterm eglot clang-format elfeed cmake-mode consult-eglot company rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
+ '(url-privacy-level 'high)
+ '(use-short-answers t)
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+ '(vterm-min-window-width 4)
  '(web-mode-code-indent-offset 2)
  '(web-mode-css-indent-offset 2)
  '(web-mode-markup-indent-offset 2))
