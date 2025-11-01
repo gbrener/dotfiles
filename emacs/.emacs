@@ -3,7 +3,7 @@
 ;;;; Created: December 23, 2012
 ;;;;
 
-;; Package repos
+;;; Package repos
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -11,7 +11,7 @@
 ;; Notifications
 (require 'notifications)
 
-;; Encryption
+;;; Encryption
 (require 'epa-file)
 (epa-file-enable)
 (setq epa-file-select-keys nil)
@@ -21,17 +21,22 @@
 (setq treesit-language-source-alist
       '((c "https://github.com/tree-sitter/tree-sitter-c" "v0.20.7")
         (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.5")
-        (python "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.4")))
+        (python "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.4")
+        (java "https://github.com/tree-sitter/tree-sitter-java" "v0.20.2")))
 (add-to-list 'eglot-server-programs '((c++-ts-mode c++-mode) "clangd" "--query-driver=/usr/bin/clang++"))
 (add-to-list 'eglot-server-programs '((c-ts-mode c-mode) "clangd" "--query-driver=/usr/bin/clang"))
 (add-to-list 'eglot-server-programs '((python-ts-mode python-mode) . ("/home/greg/Desktop/sources/projects/triton/venv/bin/pyrefly" "lsp")))
+(add-to-list 'eglot-server-programs '((java-ts-mode java-mode) . ("/home/greg/Desktop/sources/programs/jdtls/bin/jdtls" "-configuration" "config_linux" "-data" "/tmp/.eglot-java-lsp-cache/jdtls")))
 (dolist (hook '(c++-ts-mode-hook
                 c++-mode-hook
                 c-ts-mode-hook
                 c-mode-hook
                 python-ts-mode-hook
-                python-mode-hook))
+                python-mode-hook
+                java-ts-mode-hook
+                java-mode-hook))
   (add-hook hook 'eglot-ensure))
+;(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
 (setq-default eglot-workspace-configuration
               '(:pylsp (:plugins (:flake8 (:enabled t)
                                   :pycodestyle (:enabled :json-false)
@@ -41,15 +46,13 @@
 
 ;; Company
 (require 'company)
-(add-hook 'shell-mode-hook (lambda()
-                             (setq-local global-company-mode nil)
-                             (company-mode -1)))
+(add-hook 'shell-mode-hook #'(lambda() (company-mode -1)))
 
 ;; Elfeed
 (require 'elfeed)
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :before "2 days ago" :remove 'unread))
 
-;; Advanced features
+;;; Advanced features
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -60,7 +63,7 @@
         mac-command-modifier 'meta))
 (setq y-or-n-p-use-read-key t)
 
-;; Keybindings
+;;; Keybindings
 ;; In case Alt doesn't work
 (global-set-key "\C-x\C-m" #'execute-extended-command)
 
@@ -76,8 +79,17 @@
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
 
 ;; Shell-mode
-(setenv "PAGER" "cat")
-(shell)
+(add-hook 'after-init-hook #'(lambda () (progn (setenv "PAGER" "cat") (shell))))
+;;(require 'vterm)
+;;(define-key vterm-mode-map (kbd "<capslock>") 'vterm--self-insert)
+;;(defun resize-vterm-width ()
+;;  (when (eq major-mode 'vterm-mode)
+;;    (let ((width (max (- (window-max-chars-per-line) 42) 4)))
+;;      (setq-local vterm-min-window-width width)
+;;      ;(message "vterm-min-window-width set to %d" width)
+;;      )))
+;;(add-hook 'window-configuration-change-hook #'resize-vterm-width)
+;;(vterm)
 
 ;; Customizations
 (custom-set-variables
@@ -106,49 +118,60 @@
  '(eglot-autoshutdown t)
  '(eglot-extend-to-xref t)
  '(elfeed-feeds
-   '(("https://www.quantamagazine.org/feed/" math news)
-     ("https://www.techspot.com/backend.xml" dev news)
-     ("https://www.tomshardware.com/feeds.xml" dev news)
-     ("https://lwn.net/headlines/rss" dev news)
-     ("https://techpolicy.press/rss/feed.xml" dev news)
-     ("https://news.ycombinator.com/rss" dev startup news)
-     ("https://www.libhunt.com/feed" dev news)
-     ("https://qz.com/rss" dev news)
-     ("https://queue.acm.org/rss/feeds/searchengines.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/webservices.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/programminglanguages.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/processors.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/opensource.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/distributedcomputing.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/computerarchitecture.xml" dev news)
-     ("https://queue.acm.org/rss/feeds/queuecontent.xml" dev news)
-     ("https://www.infoinc.com/acm/TechNews.rss" dev news)
-     ("https://feed.infoq.com/performance-scalability/" dev news)
-     ("https://feed.infoq.com/CPlusPlus/" dev news)
-     ("https://feed.infoq.com/python/" dev news)
+   '(("https://acoup.blog/feed/" history blog)
+     ("https://antirez.com/rss" dev blog)
      ("https://broadbandbreakfast.com/rss/" news)
-     ("https://www.moneymacro.rocks/feed.xml" economics blog)
-     ("https://zeihan.com/feed/" economics blog)
-     ("https://lemire.me/blog/feed/" dev blog)
+     ("https://commoncog.com/rss/" startup blog)
      ("https://danluu.com/atom.xml" dev blog)
      ("https://eli.thegreenplace.net/feeds/all.atom.xml" dev blog)
-     ("https://www.schneier.com/feed/atom/" dev security blog)
-     ("https://mtlynch.io/posts/index.xml" dev startup blog)
-     ("https://yosefk.com/blog/feed" dev blog)
-     ("https://steveblank.com/feed/" startup blog)
-     ("https://lukasatkinson.de/feed.atom.xml" dev blog)
-     ("https://nullprogram.com/feed/" dev blog)
-     ("https://www.brendangregg.com/blog/rss.xml" dev blog)
-     ("https://antirez.com/rss" dev blog)
      ("https://fabiensanglard.net/rss.xml" dev blog)
-     ("https://reasonablypolymorphic.com/atom.xml" dev blog)
-     ("https://orlp.net/blog/atom.xml" dev blog)
+     ("https://www.cppstories.com/index.xml" dev blog)
+     ("https://feed.infoq.com/CPlusPlus/" dev news)
+     ("https://feed.infoq.com/performance-scalability/" dev news)
+     ("https://feed.infoq.com/python/" dev news)
+     ("https://feeds.feedburner.com/collabfund" startup blog)
+     ("https://feeds.megaphone.fm/israelupdate" news)
+     ("https://www.kitces.com/blog/category/1-taxes/feed/" economics blog)
+     ("https://lemire.me/blog/feed/" dev blog)
+     ("https://lukasatkinson.de/feed.atom.xml" dev blog)
      ("https://lunduke.substack.com/feed" dev blog)
-     ("http://feeds.feedburner.com/collabfund" startup blog)
-     ("https://commoncog.com/rss/" startup blog)
+     ("https://lwn.net/headlines/rss" dev news)
+     ("https://mtlynch.io/posts/index.xml" dev startup blog)
+     ("https://nationalpost.com/feed/atom" news)
+     ("https://news.ycombinator.com/rss" dev startup news)
+     ("https://nullprogram.com/feed/" dev blog)
+     ("https://orlp.net/blog/atom.xml" dev blog)
+     ("https://queue.acm.org/rss/feeds/computerarchitecture.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/distributedcomputing.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/opensource.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/processors.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/programminglanguages.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/queuecontent.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/searchengines.xml" dev news)
+     ("https://queue.acm.org/rss/feeds/webservices.xml" dev news)
+     ("https://quillette.com/articles/rss/" news)
+     ("https://qz.com/rss" dev news)
+     ("https://reasonablypolymorphic.com/atom.xml" dev blog)
+     ("https://steveblank.com/feed/" startup blog)
+     ("https://techpolicy.press/rss/feed.xml" dev news)
+     ("https://www.bloomberg.com/authors/ARbTQlRLRjE/matthew-s-levine.rss" economics news)
+     ("https://www.brendangregg.com/blog/rss.xml" dev blog)
+     ("https://www.chabad.org/tools/rss/magazine_rss.xml" news)
      ("https://www.farnamstreetblog.com/feed/" startup blog)
-     ("https://acoup.blog/feed/" history blog)
-     ("https://xkcd.com/atom.xml" comic)))
+     ("https://www.grantspub.com/adg.rss" economics news)
+     ("https://www.infoinc.com/acm/TechNews.rss" dev news)
+     ("https://www.jta.org/feed" news)
+     ("https://www.libhunt.com/feed" dev news)
+     ("https://www.moneymacro.rocks/feed.xml" economics blog)
+     ("https://www.osnews.com/feed/" dev news)
+     ("https://www.phoronix.com/linux/Programming" dev news)
+     ("https://www.quantamagazine.org/feed/" math news)
+     ("https://www.schneier.com/feed/atom/" dev security blog)
+     ("https://www.techspot.com/backend.xml" dev news)
+     ("https://www.tomshardware.com/feeds.xml" dev news)
+     ("https://xkcd.com/atom.xml" comic)
+     ("https://yosefk.com/blog/feed" dev blog)
+     ("https://zeihan.com/feed/" economics blog)))
  '(fido-mode nil)
  '(fido-vertical-mode t)
  '(fill-column 112)
@@ -174,7 +197,7 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(eldoc-box vterm eglot clang-format elfeed cmake-mode consult-eglot company rust-mode web-mode))
+   '(gradle-mode eldoc-box vterm eglot clang-format elfeed cmake-mode consult-eglot company gptel rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
