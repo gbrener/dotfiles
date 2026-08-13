@@ -36,6 +36,7 @@
                 java-ts-mode-hook
                 java-mode-hook))
   (add-hook hook 'eglot-ensure))
+
 ;(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
 (setq-default eglot-workspace-configuration
               '(:pylsp (:plugins (:flake8 (:enabled t)
@@ -43,6 +44,8 @@
                                   :mccabe (:enabled :json-false)
                                   :pyflakes (:enabled :json-false))
                         :configurationSources ["flake8"])))
+
+(define-key eglot-mode-map "\C-ca" #'eglot-code-actions)
 
 ;; Company
 (require 'company)
@@ -72,6 +75,20 @@
 (define-key global-map "\C-cc" #'org-capture)
 (add-hook 'org-mode-hook 'flyspell-mode)
 
+;; Org-roam
+(setq package-install-upgrade-built-in t)
+(setq org-roam-completion-everywhere t)
+;;;(org-roam-setup)
+(org-roam-db-autosync-mode)
+(define-key global-map "\C-cnf" #'org-roam-node-find)
+(define-key global-map "\C-cnr" #'org-roam-node-random)
+(define-key org-mode-map "\C-cni" #'org-roam-node-insert)
+(define-key org-mode-map "\C-cno" #'org-id-get-create)
+(define-key org-mode-map "\C-cnt" #'org-roam-tag-add)
+(define-key org-mode-map "\C-cna" #'org-roam-alias-add)
+(define-key org-mode-map "\C-cnl" #'org-roam-buffer-toggle)
+(define-key org-mode-map "\C-\M-i" #'completion-at-point)
+
 ;; Web mode
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
@@ -90,6 +107,14 @@
 ;;      )))
 ;;(add-hook 'window-configuration-change-hook #'resize-vterm-width)
 ;;(vterm)
+
+;; Appearance
+;;; TUI transparency
+(defun my/transparent-tui-background (frame)
+  (unless (display-graphic-p frame)
+    (set-face-background 'default "unspecified-bg" frame)))
+(add-hook 'after-make-frame-functions #'my/transparent-tui-background)
+(my/transparent-tui-background (selected-frame))
 
 ;; Customizations
 (custom-set-variables
@@ -110,28 +135,38 @@
  '(c-max-one-liner-length 112)
  '(column-number-mode t)
  '(comment-fill-column 112)
+ '(company-backends
+   '(company-bbdb company-semantic company-dabbrev company-cmake company-capf company-clang company-files
+                  (company-dabbrev-code company-gtags company-etags company-keywords)
+                  company-oddmuse company-dabbrev))
+ '(company-dabbrev-code-other-buffers nil)
  '(company-idle-delay 0.0)
  '(company-minimum-prefix-length 1)
  '(create-lockfiles nil)
  '(custom-enabled-themes '(wombat))
+ '(default-frame-alist '((vertical-scroll-bars) (alpha-background . 92)))
  '(delete-old-versions t)
  '(eglot-autoshutdown t)
+ '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-extend-to-xref t)
  '(elfeed-feeds
    '(("https://acoup.blog/feed/" history blog)
+     ("http://feeds.feedburner.com/martinkl" dev blog)
      ("https://antirez.com/rss" dev blog)
+     ("https://blog.nyman.re/feed.xml" dev blog)
      ("https://broadbandbreakfast.com/rss/" news)
      ("https://commoncog.com/rss/" startup blog)
      ("https://danluu.com/atom.xml" dev blog)
+     ("https://dayvster.com/rss.xml" dev blog)
      ("https://eli.thegreenplace.net/feeds/all.atom.xml" dev blog)
+     ("https://entropicthoughts.com/feed" dev blog)
      ("https://fabiensanglard.net/rss.xml" dev blog)
-     ("https://www.cppstories.com/index.xml" dev blog)
      ("https://feed.infoq.com/CPlusPlus/" dev news)
      ("https://feed.infoq.com/performance-scalability/" dev news)
      ("https://feed.infoq.com/python/" dev news)
+     ("https://feeds.feedblitz.com/marginalrevolution&x=1" dev blog)
      ("https://feeds.feedburner.com/collabfund" startup blog)
      ("https://feeds.megaphone.fm/israelupdate" news)
-     ("https://www.kitces.com/blog/category/1-taxes/feed/" economics blog)
      ("https://lemire.me/blog/feed/" dev blog)
      ("https://lukasatkinson.de/feed.atom.xml" dev blog)
      ("https://lunduke.substack.com/feed" dev blog)
@@ -152,15 +187,22 @@
      ("https://quillette.com/articles/rss/" news)
      ("https://qz.com/rss" dev news)
      ("https://reasonablypolymorphic.com/atom.xml" dev blog)
+     ("https://scottaaronson.blog/?feed=rss2" dev blog)
      ("https://steveblank.com/feed/" startup blog)
      ("https://techpolicy.press/rss/feed.xml" dev news)
+     ("https://therecord.media/feed/" dev news)
+     ("https://www.bleepingcomputer.com/feed/" dev news)
      ("https://www.bloomberg.com/authors/ARbTQlRLRjE/matthew-s-levine.rss" economics news)
      ("https://www.brendangregg.com/blog/rss.xml" dev blog)
      ("https://www.chabad.org/tools/rss/magazine_rss.xml" news)
+     ("https://www.cppstories.com/index.xml" dev blog)
+     ("https://www.ethanhein.com/wp/feed/" music blog)
      ("https://www.farnamstreetblog.com/feed/" startup blog)
+     ("https://www.foreignaffairs.com/rss.xml" news)
      ("https://www.grantspub.com/adg.rss" economics news)
      ("https://www.infoinc.com/acm/TechNews.rss" dev news)
      ("https://www.jta.org/feed" news)
+     ("https://www.kitces.com/blog/category/1-taxes/feed/" economics blog)
      ("https://www.libhunt.com/feed" dev news)
      ("https://www.moneymacro.rocks/feed.xml" economics blog)
      ("https://www.osnews.com/feed/" dev news)
@@ -190,6 +232,12 @@
       "* %T: %^{Description}\12  %?" :prepend t)))
  '(org-pretty-entities t)
  '(org-refile-allow-creating-parent-nodes 'confirm)
+ '(org-roam-capture-templates
+   '(("d" "default" plain "%?" :target
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
+      :unnarrowed t :kill-buffer t)))
+ '(org-roam-completion-everywhere t)
+ '(org-roam-db-autosync-mode t)
  '(org-startup-folded t)
  '(org-startup-with-latex-preview t)
  '(org-todo-interpretation 'sequence)
@@ -197,7 +245,7 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(gradle-mode eldoc-box vterm eglot clang-format elfeed cmake-mode consult-eglot company gptel rust-mode web-mode))
+   '(transient org-ref org-roam org-roam-ui gradle-mode eldoc-box vterm eglot clang-format elfeed cmake-mode consult-eglot company rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
@@ -229,6 +277,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#242424" :foreground "#f6f3e8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 94 :width normal :family "Monospace"))))
- '(mode-line ((t (:background "lime green" :foreground "black" :height 1.0 :family "Monospace"))))
- '(mode-line-inactive ((t (:background "DarkSeaGreen4" :foreground "black" :height 1.0 :family "Monospace")))))
+ )
