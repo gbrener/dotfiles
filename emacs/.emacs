@@ -18,23 +18,28 @@
 
 ;; Eglot + Tree-sitter
 (require 'eglot)
-(setq treesit-language-source-alist
-      '((c "https://github.com/tree-sitter/tree-sitter-c" "v0.20.7")
-        (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.5")
-        (python "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.4")
-        (java "https://github.com/tree-sitter/tree-sitter-java" "v0.20.2")))
-(add-to-list 'eglot-server-programs '((c++-ts-mode c++-mode) "clangd" "--query-driver=/usr/bin/clang++"))
-(add-to-list 'eglot-server-programs '((c-ts-mode c-mode) "clangd" "--query-driver=/usr/bin/clang"))
-(add-to-list 'eglot-server-programs '((python-ts-mode python-mode) . ("/home/greg/Desktop/sources/projects/triton/venv/bin/pyrefly" "lsp")))
-(add-to-list 'eglot-server-programs '((java-ts-mode java-mode) . ("/home/greg/Desktop/sources/programs/jdtls/bin/jdtls" "-configuration" "config_linux" "-data" "/tmp/.eglot-java-lsp-cache/jdtls")))
+;(setq treesit-language-source-alist
+;      '((c "https://github.com/tree-sitter/tree-sitter-c" "v0.20.7")
+;        (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.5")
+;        (python "https://github.com/tree-sitter/tree-sitter-cpp" "v0.20.4")
+;        (java "https://github.com/tree-sitter/tree-sitter-java" "v0.20.2")
+;        (html "https://github.com/tree-sitter/tree-sitter-html" "v0.23.2")
+;        (css "https://github.com/tree-sitter/tree-sitter-css" "v0.25.0")
+;        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.6" "typescript/src")
+;        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.6" "tsx/src")))
+(add-to-list 'eglot-server-programs '((c++-ts-mode) "clangd" "--query-driver=/usr/bin/clang++"))
+(add-to-list 'eglot-server-programs '((c-ts-mode) "clangd" "--query-driver=/usr/bin/clang"))
+(add-to-list 'eglot-server-programs '((python-ts-mode) . ("pyrefly" "lsp")))
+(add-to-list 'eglot-server-programs '((java-ts-mode) . ("jdtls" "-configuration" "config_linux" "-data" "/tmp/.eglot-java-lsp-cache/jdtls")))
+(add-to-list 'eglot-server-programs '((typescript-ts-mode tsx-ts-mode) . ("vtsls" "--stdio")))
 (dolist (hook '(c++-ts-mode-hook
-                c++-mode-hook
                 c-ts-mode-hook
-                c-mode-hook
                 python-ts-mode-hook
-                python-mode-hook
                 java-ts-mode-hook
-                java-mode-hook))
+                html-ts-mode-hook
+                css-ts-mode-hook
+                typescript-ts-mode-hook
+                tsx-ts-mode-hook))
   (add-hook hook 'eglot-ensure))
 
 ;(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
@@ -89,24 +94,11 @@
 (define-key org-mode-map "\C-cnl" #'org-roam-buffer-toggle)
 (define-key org-mode-map "\C-\M-i" #'completion-at-point)
 
-;; Web mode
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
-
 ;; Shell-mode
-(add-hook 'after-init-hook #'(lambda () (progn (setenv "PAGER" "cat") (shell))))
-;;(require 'vterm)
-;;(define-key vterm-mode-map (kbd "<capslock>") 'vterm--self-insert)
-;;(defun resize-vterm-width ()
-;;  (when (eq major-mode 'vterm-mode)
-;;    (let ((width (max (- (window-max-chars-per-line) 42) 4)))
-;;      (setq-local vterm-min-window-width width)
-;;      ;(message "vterm-min-window-width set to %d" width)
-;;      )))
-;;(add-hook 'window-configuration-change-hook #'resize-vterm-width)
-;;(vterm)
+;(add-hook 'after-init-hook #'(lambda () (progn (setenv "PAGER" "cat") (shell))))
+(require 'vterm)
+(require 'multi-vterm)
+(vterm)
 
 ;; Appearance
 ;;; TUI transparency
@@ -123,22 +115,18 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-save-file-name-transforms
-   '((".*\\([^/].*\\)" "/tmp/\\1" t)
-     ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)))
+   '((".*\\([^/].*\\)" "/tmp/\\1" t) ("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'" "/tmp/\\2" t)))
  '(backup-directory-alist '(("" . "~/.emacs.d/backups")))
  '(browse-url-browser-function 'eww-browse-url)
  '(c-default-style
-   '((c-mode . "python")
-     (c++-mode . "stroustrup")
-     (java-mode . "java")
-     (other . "k&r")))
+   '((c-mode . "python") (c++-mode . "stroustrup") (java-mode . "java") (other . "k&r")))
  '(c-max-one-liner-length 112)
  '(column-number-mode t)
  '(comment-fill-column 112)
  '(company-backends
    '(company-bbdb company-semantic company-dabbrev company-cmake company-capf company-clang company-files
-                  (company-dabbrev-code company-gtags company-etags company-keywords)
-                  company-oddmuse company-dabbrev))
+                  (company-dabbrev-code company-gtags company-etags company-keywords) company-oddmuse
+                  company-dabbrev))
  '(company-dabbrev-code-other-buffers nil)
  '(company-idle-delay 0.0)
  '(company-minimum-prefix-length 1)
@@ -221,21 +209,16 @@
  '(global-company-mode t)
  '(indent-tabs-mode nil)
  '(major-mode-remap-alist
-   '((c++-mode . c++-ts-mode)
-     (c-mode . c-ts-mode)
-     (c-or-c++-mode . c-or-c++-ts-mode)
+   '((c++-mode . c++-ts-mode) (c-mode . c-ts-mode) (c-or-c++-mode . c-or-c++-ts-mode)
      (python-mode . python-ts-mode)))
  '(menu-bar-mode nil)
  '(org-capture-templates
-   '(("j" "Journal" entry
-      (file "~/org/notes.org")
-      "* %T: %^{Description}\12  %?" :prepend t)))
+   '(("j" "Journal" entry (file "~/org/notes.org") "* %T: %^{Description}\12  %?" :prepend t)))
  '(org-pretty-entities t)
  '(org-refile-allow-creating-parent-nodes 'confirm)
  '(org-roam-capture-templates
-   '(("d" "default" plain "%?" :target
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
-      :unnarrowed t :kill-buffer t)))
+   '(("d" "default" plain "%?" :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}") :unnarrowed t
+      :kill-buffer t)))
  '(org-roam-completion-everywhere t)
  '(org-roam-db-autosync-mode t)
  '(org-startup-folded t)
@@ -245,12 +228,14 @@
    '((sequence "TODO(t!)" "IN-PROGRESS(p!)" "|" "CANCELED(c!)" "DONE(d!)")))
  '(org-use-fast-tag-selection t)
  '(package-selected-packages
-   '(transient org-ref org-roam org-roam-ui gradle-mode eldoc-box vterm eglot clang-format elfeed cmake-mode consult-eglot company rust-mode web-mode))
+   '(transient org-ref org-roam org-roam-ui gradle-mode eldoc-box vterm eglot clang-format elfeed cmake-mode
+               consult-eglot company rust-mode web-mode))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(treemacs-space-between-root-nodes nil)
  '(url-privacy-level 'high)
  '(use-short-answers t)
+ '(visible-bell t)
  '(visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
  '(vterm-min-window-width 4)
  '(web-mode-code-indent-offset 2)
